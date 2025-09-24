@@ -15,8 +15,11 @@ public enum ErrorCode {
     UNAUTHORIZED(1008, "Unauthorized", HttpStatus.UNAUTHORIZED),
     INVALID_ROLE(1002, "Invalid role", HttpStatusCode.valueOf(400)),
     PAYMENT_ERROR(1004, "Payment error", HttpStatusCode.valueOf(400)),
-    VEHICLE_NOT_EXISTED(1006, "Vehicle existed (please check your license plate)", HttpStatusCode.valueOf(400))
-    ;
+    VEHICLE_NOT_EXISTED(1006, "Vehicle existed (please check your license plate)", HttpStatusCode.valueOf(400)),
+    VEHICLE_ALREADY_REGISTERED(1009, "Vehicle already registered", HttpStatusCode.valueOf(400));
+
+
+
     @Getter
     private final int code;
     private String message;

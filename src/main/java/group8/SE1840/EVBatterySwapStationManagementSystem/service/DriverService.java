@@ -17,7 +17,4 @@ public interface DriverService {
 
     DriverResponse updateDriver(Long driverId, DriverDTO newInfoDriver);
 
-    Vehicle addVehicleToDriver(Long driverId, String vin, String batteryType);
-
-    Vehicle getVehicleByDriver(Long driverId);
 }
