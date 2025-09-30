@@ -1,13 +1,12 @@
 package group8.EVBatterySwapStation_BackEnd.controller;
 
+import group8.EVBatterySwapStation_BackEnd.DTO.request.StationRequest;
 import group8.EVBatterySwapStation_BackEnd.DTO.response.StationInfoResponse;
+import group8.EVBatterySwapStation_BackEnd.entity.Station;
 import group8.EVBatterySwapStation_BackEnd.service.StationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +16,11 @@ import java.util.List;
 public class StationController {
     private final StationService stationService;
 
+    @PostMapping("/stations")
+    public ResponseEntity<Station> createStation(@RequestBody StationRequest request) {
+        return ResponseEntity.ok(stationService.createStation(request));
+    }
+
     @GetMapping("/nearby")
     public ResponseEntity<List<StationInfoResponse>> getNearbyStations(
             @RequestParam double lat,
@@ -25,5 +29,10 @@ public class StationController {
         return ResponseEntity.ok(
                 stationService.findNearestStations(lat, lon, radiusKm));
     }
-    
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Station>> searchStations(@RequestParam String keyword) {
+        return ResponseEntity.ok(stationService.searchStations(keyword));
+    }
+
 }

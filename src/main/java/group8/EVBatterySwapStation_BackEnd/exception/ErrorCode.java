@@ -19,7 +19,10 @@ public enum ErrorCode {
     VEHICLE_ALREADY_REGISTERED(1009, "Vehicle already registered", HttpStatusCode.valueOf(400)),
     VEHICLE_INELIGIBLE_FOR_SERVICE(1010, "Vehicle ineligible for service (vehicle is too old)", HttpStatusCode.valueOf(400)),
     VIN_ALREADY_EXISTS(1011, "Vehicle with this VIN already exists", HttpStatusCode.valueOf(400)),
-    DRIVER_ALREADY_HAS_VEHICLE(1012, "Driver already has a registered vehicle", HttpStatusCode.valueOf(400))
+    DRIVER_ALREADY_HAS_VEHICLE(1012, "Driver already has a registered vehicle", HttpStatusCode.valueOf(400)),
+    STATION_NOT_EXISTED(2001, "Station not existed", HttpStatusCode.valueOf(404)),
+    BATTERY_NOT_EXISTED(3001, "Battery not existed", HttpStatusCode.valueOf(404)),
+    STATION_FULL(2002, "Station is full", HttpStatusCode.valueOf(400))
 
 ;
 

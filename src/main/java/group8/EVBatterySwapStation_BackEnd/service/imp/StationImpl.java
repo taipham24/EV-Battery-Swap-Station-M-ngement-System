@@ -1,5 +1,6 @@
 package group8.EVBatterySwapStation_BackEnd.service.imp;
 
+import group8.EVBatterySwapStation_BackEnd.DTO.request.StationRequest;
 import group8.EVBatterySwapStation_BackEnd.DTO.response.StationInfoResponse;
 import group8.EVBatterySwapStation_BackEnd.entity.Station;
 import group8.EVBatterySwapStation_BackEnd.enums.BatteryStatus;
@@ -22,6 +23,27 @@ public class StationImpl implements StationService {
     private BatteryRepository batteryRepository;
 
     @Override
+    public Station createStation(StationRequest request) {
+        Station station = Station.builder()
+                .name(request.getName())
+                .address(request.getAddress())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
+                .capacity(request.getCapacity())
+                .status(request.getStatus())
+                .build();
+        return stationRepository.save(station);
+    }
+
+    @Override
+    public List<Station> searchStations(String keyword) {
+        List<Station> stations = stationRepository.findByNameContainingIgnoreCaseOrAddressContainingIgnoreCase(keyword, keyword);
+        return stations.stream()
+                .sorted(Comparator.comparing(Station::getName))
+                .toList();
+    }
+
+    @Override
     public List<StationInfoResponse> findNearestStations(double lat, double lon, double radiusKm) {
         List<Station> stations = stationRepository.findAll();
         return stations.stream()
@@ -42,6 +64,7 @@ public class StationImpl implements StationService {
                 .sorted(Comparator.comparingDouble(s -> distance(lat, lon, s.getLatitude(), s.getLongitude())))
                 .toList();
     }
+
     @Override
     public double distance(double lat1, double lon1, double lat2, double lon2) {
         final double R = 6371; // Radius of the earth in km
