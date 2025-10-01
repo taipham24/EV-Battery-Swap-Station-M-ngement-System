@@ -22,9 +22,11 @@ public enum ErrorCode {
     DRIVER_ALREADY_HAS_VEHICLE(1012, "Driver already has a registered vehicle", HttpStatusCode.valueOf(400)),
     STATION_NOT_EXISTED(2001, "Station not existed", HttpStatusCode.valueOf(404)),
     BATTERY_NOT_EXISTED(3001, "Battery not existed", HttpStatusCode.valueOf(404)),
-    STATION_FULL(2002, "Station is full", HttpStatusCode.valueOf(400))
-
-;
+    STATION_FULL(2002, "Station is full", HttpStatusCode.valueOf(400)),
+    BOOKING_ALREADY_EXISTED(4001, "Booking already existed", HttpStatusCode.valueOf(400)),
+    BOOKING_NOT_EXISTED(4002, "Booking not existed", HttpStatusCode.valueOf(404)),
+    BOOKING_NO_BATTERY_AVAILABLE(4003, "No battery available at the station", HttpStatusCode.valueOf(400))
+    ;
 
     @Getter
     private final int code;
