@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/batteries")
 @RequiredArgsConstructor
@@ -20,4 +22,13 @@ public class BatteryController {
     ) {
         return ResponseEntity.ok(batteryService.addBatteryToStation(stationId, status));
     }
+
+    @GetMapping("/station/{stationId}")
+    public ResponseEntity<List<Battery>> getBatteriesByStation(
+            @PathVariable Long stationId,
+            @RequestParam(required = false) BatteryStatus status
+    ) {
+        return ResponseEntity.ok(batteryService.getBatteriesByStation(stationId, status));
+    }
+
 }

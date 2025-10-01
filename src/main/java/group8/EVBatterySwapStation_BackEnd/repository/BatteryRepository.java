@@ -9,4 +9,7 @@ import java.util.List;
 
 public interface BatteryRepository extends JpaRepository<Battery, Long> {
     List<Battery> findByStationAndStatus(Station station, BatteryStatus status);
+
+    List<Battery> findByStation_StationIdAndStatus(Long stationId, BatteryStatus status);
+    List<Battery> findByStation_StationId(Long stationId);
 }

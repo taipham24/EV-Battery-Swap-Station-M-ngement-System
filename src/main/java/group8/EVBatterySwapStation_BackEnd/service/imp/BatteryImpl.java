@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BatteryImpl implements BatteryService {
@@ -35,4 +37,23 @@ public class BatteryImpl implements BatteryService {
         station.getBatteries().add(battery);
         return batteryRepository.save(battery);
     }
+
+    @Override
+    public List<Battery> getBatteriesByStation(Long stationId, BatteryStatus status) {
+        List<Battery> batteries;
+        if (status != null) {
+            batteries = batteryRepository.findByStation_StationIdAndStatus(stationId, status);
+        } else {
+            batteries = batteryRepository.findByStation_StationId(stationId);
+        }
+        return batteries.stream()
+                .map(b -> new Battery(
+                        b.getBatteryId(),
+                        b.getSerialNumber(),
+                        b.getStation(),
+                        b.getStatus()
+                ))
+                .toList();
+    }
+
 }
