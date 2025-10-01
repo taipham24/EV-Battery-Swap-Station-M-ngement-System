@@ -77,4 +77,11 @@ public class StationImpl implements StationService {
         return R * c; // convert to kilometers
     }
 
+    @Override
+    public void deleteStation(Long id) {
+        if (!stationRepository.existsById(id)) {
+            throw new RuntimeException("Station not found with ID: " + id);
+        }
+        stationRepository.deleteById(id);
+    }
 }
