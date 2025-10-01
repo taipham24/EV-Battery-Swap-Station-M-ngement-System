@@ -35,4 +35,10 @@ public class StationController {
         return ResponseEntity.ok(stationService.searchStations(keyword));
     }
 
+    @DeleteMapping("/{stationId}")
+    public ResponseEntity<Void> deleteStation(@PathVariable Long stationId) {
+        stationService.deleteStation(stationId);
+        return ResponseEntity.noContent().build();
+    }
+
 }
