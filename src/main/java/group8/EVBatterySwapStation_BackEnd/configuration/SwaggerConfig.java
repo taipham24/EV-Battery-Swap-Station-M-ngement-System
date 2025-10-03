@@ -19,9 +19,9 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI().info(new io.swagger.v3.oas.models.info.Info()
-                        .title("Flower Subscription API Documentation")
+                        .title("EV Battery Swap Station Management System API Documentation")
                         .version(appVersion)
-                        .description("API documentation for the Flower Subscription project"))
+                        .description("API documentation for the EV Battery Swap Station Management System project"))
                 .addSecurityItem(new io.swagger.v3.oas.models.security.SecurityRequirement().addList("BearerAuth"));
     }
 }
