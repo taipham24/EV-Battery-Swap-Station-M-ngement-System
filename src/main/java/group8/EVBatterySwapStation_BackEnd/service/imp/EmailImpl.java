@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -42,6 +41,29 @@ public class EmailImpl implements EmailService {
             mailSender.send(message);
         } catch (MessagingException e) {
             throw new RuntimeException("Failed to send booking confirmation email", e);
+        }
+    }
+
+    @Override
+    public void sendBookingRejected(String to, Booking booking) {
+        try {
+            String htmlContent = emailTemplateService.loadBookingTemplate(
+                    "templates/booking-rejected.html",
+                    booking.getDriver().getFullName(),
+                    booking.getStation().getName(),
+                    booking.getStation().getAddress(),
+                    booking.getBookingTime().toString(),
+                    booking.getStatus().toString()
+            );
+            // Tạo MimeMessage để gửi HTML
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
+            helper.setTo(to);
+            helper.setSubject("Thông báo từ chối đặt lịch đổi pin");
+            helper.setText(htmlContent, true); // true để gửi HTML
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send booking rejection email", e);
         }
     }
 }
