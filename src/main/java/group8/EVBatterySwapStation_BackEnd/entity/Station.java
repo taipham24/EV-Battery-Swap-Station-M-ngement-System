@@ -32,4 +32,7 @@ public class Station {
     private String imageUrl; // URL hình ảnh trạm
     @OneToMany(mappedBy = "station", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Battery> batteries = new ArrayList<>();
+
+    @OneToMany(mappedBy = "station", cascade = CascadeType.ALL)
+    private List<StaffProfile> staffProfiles = new ArrayList<>();
 }
