@@ -30,6 +30,7 @@ public class Booking {
     @JoinColumn(name = "battery_id")
     private Battery reservedBattery; // pin được giữ cho driver
 
+
     private LocalDateTime bookingTime;
 
     @Enumerated(EnumType.STRING)

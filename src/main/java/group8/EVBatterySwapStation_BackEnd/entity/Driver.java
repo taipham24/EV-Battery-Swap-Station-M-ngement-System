@@ -43,6 +43,10 @@ public class Driver {
 
     @OneToOne(mappedBy = "driver", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Vehicle vehicle;
+
+    @OneToOne(mappedBy = "driver", fetch = FetchType.LAZY)
+    private StaffProfile staffProfile;
+
     // Dịch vụ đổi pin
     @Column(name = "is_subscribed")
     private boolean isSubscribed; // true nếu đã đăng ký dịch vụ đổi pin

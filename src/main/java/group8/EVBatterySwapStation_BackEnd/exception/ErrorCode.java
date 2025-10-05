@@ -25,7 +25,9 @@ public enum ErrorCode {
     STATION_FULL(2002, "Station is full", HttpStatusCode.valueOf(400)),
     BOOKING_ALREADY_EXISTED(4001, "Booking already existed", HttpStatusCode.valueOf(400)),
     BOOKING_NOT_EXISTED(4002, "Booking not existed", HttpStatusCode.valueOf(404)),
-    BOOKING_NO_BATTERY_AVAILABLE(4003, "No battery available at the station", HttpStatusCode.valueOf(400))
+    BOOKING_NO_BATTERY_AVAILABLE(4003, "No battery available at the station", HttpStatusCode.valueOf(400)),
+    INVALID_BOOKING_STATUS(4004, "Invalid booking status", HttpStatusCode.valueOf(400)),
+    BOOKING_CANNOT_RESCHEDULE(4005, "Booking cannot be rescheduled", HttpStatusCode.valueOf(400)),
     ;
 
     @Getter

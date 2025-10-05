@@ -5,6 +5,7 @@ import group8.EVBatterySwapStation_BackEnd.service.BookingService;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -21,5 +22,25 @@ public class BookingController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime bookingTime) {
         BookingResponse response = bookingService.createBooking(stationId, bookingTime);
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{bookingId}/reschedule")
+    public ResponseEntity<BookingResponse> rescheduleBooking(
+            @PathVariable Long bookingId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime newBookingTime) {
+        BookingResponse response = bookingService.rescheduleBooking(bookingId, newBookingTime);
+        return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasRole('STAFF')")
+    @PostMapping("/{bookingId}/confirm")
+    public ResponseEntity<BookingResponse> confirmBooking(@PathVariable Long bookingId, @PathVariable Long staffId) {
+        return ResponseEntity.ok(bookingService.confirmBooking(bookingId, staffId));
+    }
+
+    @PreAuthorize("hasRole('STAFF')")
+    @PostMapping("/{bookingId}/cancel")
+    public ResponseEntity<BookingResponse> rejectBooking(@PathVariable Long bookingId, @PathVariable Long staffId) {
+        return ResponseEntity.ok(bookingService.rejectBooking(bookingId, staffId));
     }
 }
