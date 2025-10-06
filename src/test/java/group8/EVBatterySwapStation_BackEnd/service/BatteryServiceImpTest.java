@@ -6,7 +6,6 @@ import group8.EVBatterySwapStation_BackEnd.exception.AppException;
 import group8.EVBatterySwapStation_BackEnd.exception.ErrorCode;
 import group8.EVBatterySwapStation_BackEnd.repository.BatteryRepository;
 import group8.EVBatterySwapStation_BackEnd.repository.StationRepository;
-import group8.EVBatterySwapStation_BackEnd.service.imp.BatteryServiceImp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,5 +1,6 @@
 package group8.EVBatterySwapStation_BackEnd.controller;
 
+import group8.EVBatterySwapStation_BackEnd.DTO.request.UpdateStatusRequest;
 import group8.EVBatterySwapStation_BackEnd.entity.Battery;
 import group8.EVBatterySwapStation_BackEnd.enums.BatteryStatus;
 import group8.EVBatterySwapStation_BackEnd.service.BatteryService;
@@ -91,9 +92,4 @@ class BatterySummaryBucketParser {
     }
 }
 
-@lombok.Data
-class UpdateStatusRequest {
-    private BatteryStatus status;
-    private String reason;
-    private boolean adminOverride;
-}
+
