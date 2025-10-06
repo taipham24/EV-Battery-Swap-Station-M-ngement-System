@@ -19,6 +19,12 @@ public class VehicleImpl implements VehicleService {
         if (vehicle.getBatteryType() == null) {
             throw new IllegalArgumentException("Battery type is required");
         }
+        if (vehicle.getModel() == null || vehicle.getModel().isEmpty()) {
+            throw new IllegalArgumentException("Model is required");
+        }
+        if (vehicle.getManufacturer() == null || vehicle.getManufacturer().isEmpty()) {
+            throw new IllegalArgumentException("Manufacturer is required");
+        }
         return vehicleRepository.save(vehicle);
     }
 }

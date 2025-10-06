@@ -6,5 +6,7 @@ import lombok.Data;
 public class VehicleRegistrationRequest {
     private String vin;
     private BatteryType batteryType;
-
+    private String model;
+    private String manufacturer;
+    private String imageUrl;
 }
