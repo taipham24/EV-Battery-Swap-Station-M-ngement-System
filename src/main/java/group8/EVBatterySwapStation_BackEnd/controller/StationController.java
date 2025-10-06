@@ -6,6 +6,7 @@ import group8.EVBatterySwapStation_BackEnd.entity.Station;
 import group8.EVBatterySwapStation_BackEnd.service.StationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class StationController {
     private final StationService stationService;
 
     @PostMapping("/stations")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Station> createStation(@RequestBody StationRequest request) {
         return ResponseEntity.ok(stationService.createStation(request));
     }
@@ -36,6 +38,7 @@ public class StationController {
     }
 
     @DeleteMapping("/{stationId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteStation(@PathVariable Long stationId) {
         stationService.deleteStation(stationId);
         return ResponseEntity.noContent().build();
