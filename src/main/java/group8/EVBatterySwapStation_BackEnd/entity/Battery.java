@@ -6,7 +6,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "battery")
+@Table(name = "battery",
+        indexes = {
+                @Index(name = "idx_battery_station_status", columnList = "station_id,status"),
+                @Index(name = "idx_battery_model", columnList = "model")
+        })
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,7 +22,7 @@ public class Battery {
     @Column(name = "battery_id")
     private Long batteryId;
 
-    @Column(name = "serial_number", unique = true, nullable = false)
+    @Column(name = "serial_number", unique = true, nullable = false, length = 64)
     private String serialNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,4 +32,10 @@ public class Battery {
 
     @Enumerated(EnumType.STRING)
     private BatteryStatus status;
+
+    @Column(name = "capacity_wh", nullable = false)
+    private Integer capacityWh;
+
+    @Column(name = "model", nullable = false, length = 128)
+    private String model;
 }

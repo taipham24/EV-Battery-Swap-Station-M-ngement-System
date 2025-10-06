@@ -7,22 +7,18 @@ import group8.EVBatterySwapStation_BackEnd.exception.AppException;
 import group8.EVBatterySwapStation_BackEnd.exception.ErrorCode;
 import group8.EVBatterySwapStation_BackEnd.repository.BatteryRepository;
 import group8.EVBatterySwapStation_BackEnd.repository.StationRepository;
-import group8.EVBatterySwapStation_BackEnd.service.BatteryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 @RequiredArgsConstructor
-public class BatteryImpl implements BatteryService {
+public class BatteryImpl {
     @Autowired
     private final StationRepository stationRepository;
     @Autowired
     private BatteryRepository batteryRepository;
 
-    @Override
     public Battery addBatteryToStation(Long stationId, BatteryStatus status) {
         Station station = stationRepository.findById(stationId)
                 .orElseThrow(() -> new AppException(ErrorCode.DRIVER_NOT_EXISTED));
@@ -38,7 +34,6 @@ public class BatteryImpl implements BatteryService {
         return batteryRepository.save(battery);
     }
 
-    @Override
     public List<Battery> getBatteriesByStation(Long stationId, BatteryStatus status) {
         List<Battery> batteries;
         if (status != null) {
@@ -46,14 +41,7 @@ public class BatteryImpl implements BatteryService {
         } else {
             batteries = batteryRepository.findByStation_StationId(stationId);
         }
-        return batteries.stream()
-                .map(b -> new Battery(
-                        b.getBatteryId(),
-                        b.getSerialNumber(),
-                        b.getStation(),
-                        b.getStatus()
-                ))
-                .toList();
+        return batteries;
     }
 
 }
