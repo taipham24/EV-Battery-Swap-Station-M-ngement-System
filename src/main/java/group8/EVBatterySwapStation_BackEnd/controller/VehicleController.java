@@ -35,6 +35,9 @@ public class VehicleController {
         Vehicle vehicle = new Vehicle();
         vehicle.setVin(request.getVin());
         vehicle.setBatteryType(request.getBatteryType());
+        vehicle.setModel(request.getModel());
+        vehicle.setManufacturer(request.getManufacturer());
+        vehicle.setImageUrl(request.getImageUrl());
         vehicle.setDriver(driver);
 
         Vehicle registeredVehicle = vehicleService.registerVehicle(vehicle);
