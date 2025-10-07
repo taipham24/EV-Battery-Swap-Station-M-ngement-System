@@ -21,6 +21,8 @@ jobs:
           distribution: 'temurin'
       - name: Grant execute permission for mvnw
         run: chmod +x ./mvnw
+      - name: Run tests
+        run: ./mvnw test -Dspring.profiles.active=test
       - name: Build with Maven
         run: ./mvnw clean package
       - uses: FirebaseExtended/action-hosting-deploy@v0
