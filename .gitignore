@@ -32,6 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-*.json
+*.json(unignore)
 credentials.json
 serviceAccount*.json
