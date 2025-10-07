@@ -14,5 +14,6 @@ public class StationInfoResponse {
     private double longitude;
     private int capacity;
     private StationStatus status;
+    private String imageUrl;
     private long availableBatteries;
 }

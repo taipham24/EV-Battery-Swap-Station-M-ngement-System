@@ -2,6 +2,7 @@ package group8.EVBatterySwapStation_BackEnd.entity;
 
 import group8.EVBatterySwapStation_BackEnd.enums.StationStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -29,7 +30,10 @@ public class Station {
     @Enumerated(EnumType.STRING)
     private StationStatus status; // trạng thái hoạt động của trạm
 
+    @Size(max = 255, message = "Image URL must not exceed 255 characters")
+    @Column(name = "image_url", length = 255)
     private String imageUrl; // URL hình ảnh trạm
+
     @OneToMany(mappedBy = "station", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Battery> batteries = new ArrayList<>();
 
