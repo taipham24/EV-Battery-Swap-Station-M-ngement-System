@@ -1,0 +1,23 @@
+{
+  "name": "n",
+  "version": "1.0.0",
+  "description": "ev-battery-swap-station-management-system",
+  "homepage": "https://github.com/taipham24/EV-Battery-Swap-Station-M-ngement-System#readme",
+  "bugs": {
+    "url": "https://github.com/taipham24/EV-Battery-Swap-Station-M-ngement-System/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taipham24/EV-Battery-Swap-Station-M-ngement-System.git"
+  },
+  "license": "ISC",
+  "author": "thanhan139",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
