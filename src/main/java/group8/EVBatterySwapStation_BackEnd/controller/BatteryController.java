@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class BatteryController {
     private final BatteryService batteryService;
 
     @PostMapping("/station/{stationId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Battery> addBatteryToStation(
             @PathVariable Long stationId,
             @RequestParam BatteryStatus status
@@ -30,6 +32,7 @@ public class BatteryController {
     }
 
     @GetMapping("/station/{stationId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<Battery>> getBatteriesByStation(
             @PathVariable Long stationId,
             @RequestParam(required = false) BatteryStatus status
@@ -38,6 +41,7 @@ public class BatteryController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Page<Battery>> listBatteries(
             @RequestParam(required = false) BatteryStatus status,
             @RequestParam(required = false) String model,
@@ -65,6 +69,7 @@ public class BatteryController {
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Battery> updateStatus(
             @PathVariable Long id,
             @RequestBody UpdateStatusRequest request

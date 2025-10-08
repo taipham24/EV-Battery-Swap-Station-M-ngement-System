@@ -11,4 +11,5 @@ public class StationRequest {
     private double longitude;
     private int capacity;
     private StationStatus status;
+    private String imageUrl;
 }

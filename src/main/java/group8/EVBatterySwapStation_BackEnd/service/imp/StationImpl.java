@@ -31,6 +31,7 @@ public class StationImpl implements StationService {
                 .longitude(request.getLongitude())
                 .capacity(request.getCapacity())
                 .status(request.getStatus())
+                .imageUrl(request.getImageUrl())
                 .build();
         return stationRepository.save(station);
     }
@@ -58,6 +59,7 @@ public class StationImpl implements StationService {
                             s.getLongitude(),
                             s.getCapacity(),
                             s.getStatus(),
+                            s.getImageUrl(),
                             available
                     );
                 })
