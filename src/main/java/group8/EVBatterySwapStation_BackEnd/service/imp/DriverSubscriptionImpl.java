@@ -59,6 +59,13 @@ public class DriverSubscriptionImpl implements DriverSubscriptionService {
                 .orElseThrow(() -> new AppException(ErrorCode.SUBSCRIPTION_INACTIVE));
     }
 
+    @Override
+    public List<DriverSubscription> getAllSubscriptionsForDriver(Long driverId) {
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new AppException(ErrorCode.DRIVER_NOT_EXISTED));
+        return repository.findByDriver(driver);
+    }
+
     public void checkAndExpireSubscriptions() {
         List<DriverSubscription> all = repository.findAll();
         LocalDateTime now = LocalDateTime.now();

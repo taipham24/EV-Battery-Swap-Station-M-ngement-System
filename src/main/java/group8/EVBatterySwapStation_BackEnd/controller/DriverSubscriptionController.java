@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/driver-subscriptions")
 @RequiredArgsConstructor
@@ -22,4 +24,10 @@ public class DriverSubscriptionController {
     public ResponseEntity<DriverSubscription> getActive(@PathVariable Long driverId) {
         return ResponseEntity.ok(service.getActiveSubscriptionForDriver(driverId));
     }
+
+    @GetMapping("/{driverId}/history")
+    public ResponseEntity<List<DriverSubscription>> getHistory(@PathVariable Long driverId) {
+        return ResponseEntity.ok(service.getAllSubscriptionsForDriver(driverId));
+    }
+
 }
