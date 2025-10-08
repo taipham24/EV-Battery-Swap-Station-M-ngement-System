@@ -18,4 +18,8 @@ public class DriverSubscriptionController {
         return ResponseEntity.ok(service.createSubscription(request));
     }
 
+    @GetMapping("/{driverId}/active")
+    public ResponseEntity<DriverSubscription> getActive(@PathVariable Long driverId) {
+        return ResponseEntity.ok(service.getActiveSubscriptionForDriver(driverId));
+    }
 }
