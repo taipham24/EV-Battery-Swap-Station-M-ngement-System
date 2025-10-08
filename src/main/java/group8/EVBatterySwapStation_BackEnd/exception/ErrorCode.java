@@ -28,10 +28,13 @@ public enum ErrorCode {
     BOOKING_NO_BATTERY_AVAILABLE(4003, "No battery available at the station", HttpStatusCode.valueOf(400)),
     INVALID_BOOKING_STATUS(4004, "Invalid booking status", HttpStatusCode.valueOf(400)),
     BOOKING_CANNOT_RESCHEDULE(4005, "Booking cannot be rescheduled", HttpStatusCode.valueOf(400)),
+    BATTERY_NOT_FOUND(5000, "Battery not found", HttpStatusCode.valueOf(404)),
     INVALID_QUERY(5001, "Invalid query parameters", HttpStatusCode.valueOf(400)),
     INVALID_TRANSITION(5002, "Invalid status transition", HttpStatusCode.valueOf(409)),
     SERIAL_ALREADY_EXISTS(5003, "Serial number already exists", HttpStatusCode.valueOf(409)),
     INVALID_BUCKETS(5004, "Invalid capacity buckets format", HttpStatusCode.valueOf(400)),
+    SUBSCRIPTION_NOT_FOUND(1013, "Subscription not found", HttpStatusCode.valueOf(404)),
+    SUBSCRIPTION_INACTIVE(1014, "Subscription is inactive", HttpStatusCode.valueOf(400)),
     ;
 
     @Getter
