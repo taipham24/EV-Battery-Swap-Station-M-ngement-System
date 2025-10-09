@@ -36,9 +36,4 @@ public class SubscriptionPlan {
     @Column(name = "swap_limit")
     private Integer swapLimit;
 
-    @Column(name = "price_per_swap")
-    private Double pricePerSwap; // giá khi KHÔNG có gói thuê (per-swap)
-
-    @Column(name = "price_per_extra_swap")
-    private Double pricePerExtraSwap; // giá khi vượt giới hạn trong gói
 }

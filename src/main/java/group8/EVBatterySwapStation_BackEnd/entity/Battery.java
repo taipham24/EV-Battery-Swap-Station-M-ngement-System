@@ -33,6 +33,7 @@ public class Battery {
     @Enumerated(EnumType.STRING)
     private BatteryStatus status;
 
+
     @Column(name = "capacity_wh", nullable = false)
     private Integer capacityWh;
 

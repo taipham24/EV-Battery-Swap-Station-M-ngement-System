@@ -30,4 +30,9 @@ public class DriverSubscriptionController {
         return ResponseEntity.ok(service.getAllSubscriptionsForDriver(driverId));
     }
 
+    @PatchMapping("/{driverId}/cancel")
+    public ResponseEntity<DriverSubscription> cancel(@PathVariable Long driverId) {
+        return ResponseEntity.ok(service.cancelSubscription(driverId));
+    }
+
 }

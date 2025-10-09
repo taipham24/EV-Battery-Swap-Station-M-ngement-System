@@ -11,4 +11,8 @@ public interface DriverSubscriptionService {
     DriverSubscription getActiveSubscriptionForDriver(Long driverId);
 
     List<DriverSubscription> getAllSubscriptionsForDriver(Long driverId);
+
+    DriverSubscription cancelSubscription(Long subscriptionId);
+
+    void checkAndExpireSubscriptions();
 }
