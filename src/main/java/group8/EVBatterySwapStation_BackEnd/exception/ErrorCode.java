@@ -35,6 +35,11 @@ public enum ErrorCode {
     INVALID_BUCKETS(5004, "Invalid capacity buckets format", HttpStatusCode.valueOf(400)),
     SUBSCRIPTION_NOT_FOUND(1013, "Subscription not found", HttpStatusCode.valueOf(404)),
     SUBSCRIPTION_INACTIVE(1014, "Subscription is inactive", HttpStatusCode.valueOf(400)),
+    BOOKING_INVALID(6001, "Booking not active/not found", HttpStatusCode.valueOf(400)),
+    BATTERY_NOT_AVAILABLE(6002, "Reserved battery not available", HttpStatusCode.valueOf(409)),
+    ALREADY_PAID(6003, "Payment already recorded", HttpStatusCode.valueOf(409)),
+    AMOUNT_MISMATCH(6004, "Amount mismatch", HttpStatusCode.valueOf(400)),
+    BATTERY_NOT_FOUND(6005, "Battery not found", HttpStatusCode.valueOf(404)),
     ;
 
     @Getter
