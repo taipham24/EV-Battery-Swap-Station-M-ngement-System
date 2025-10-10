@@ -31,7 +31,7 @@ public class Payment {
     private String details;
 
     @Enumerated(EnumType.STRING)
-    private PaymentStatus status;
+    private PaymentStatus status= PaymentStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;

@@ -38,4 +38,8 @@ public class DriverSubscription {
 
     @Column(name = "auto_renew")
     private boolean autoRenew;
+
+    @OneToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 }
