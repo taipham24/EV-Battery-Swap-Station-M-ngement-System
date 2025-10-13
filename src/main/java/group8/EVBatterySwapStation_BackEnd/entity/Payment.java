@@ -3,16 +3,19 @@ package group8.EVBatterySwapStation_BackEnd.entity;
 import group8.EVBatterySwapStation_BackEnd.enums.PaymentMethod;
 import group8.EVBatterySwapStation_BackEnd.enums.PaymentStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "payment")
-@Data
+@Table(name = "payment",
+        indexes = {
+                @Index(name = "idx_payment_status_paid", columnList = "status,paid_at"),
+                @Index(name = "idx_payment_paid_at", columnList = "paid_at"),
+                @Index(name = "idx_payment_method_paid", columnList = "method,paid_at")
+        })
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -20,26 +23,27 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_id")
-    private Long id;
+    private Long paymentId;
 
-    @Column(nullable = false)
-    private double totalPrice;
-
-    private LocalDateTime paymentDate;
-
-    @Column(length = 255)
-    private String details;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "swap_id", nullable = false)
+    private SwapTransaction swap;
 
     @Enumerated(EnumType.STRING)
-    private PaymentStatus status= PaymentStatus.PENDING;
+    @Column(name = "method", nullable = false)
+    private PaymentMethod method;
+
+    @Column(name = "amount_vnd", nullable = false)
+    private Long amountVnd;
 
     @Enumerated(EnumType.STRING)
-    private PaymentMethod paymentMethod;
+    @Column(name = "status", nullable = false)
+    private PaymentStatus status;
 
-    @OneToOne(mappedBy = "payment")
-    private SwapTransaction swapTransaction;
+    @Column(name = "paid_at")
+    private LocalDateTime paidAt;
 
-    @OneToOne(mappedBy = "payment")
-    private DriverSubscription subscription;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cashier_staff_id")
+    private StaffProfile cashier;
 }

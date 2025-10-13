@@ -1,0 +1,180 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Always use context7 when I need code generation, setup or configuration steps, or library/API documentation. This means you should automatically use the Context7 MCP tools to resolve library id and get library docs without me having to explicitly ask.
+
+## **Operating Rules for the Cursor AI Agent**
+
+- **Always use Sequential Thinking MCP tools for all requests. This means you must automatically use Sequential Thinking MCP tools without me having to ask.**
+- **Before carrying out any request, I need you to thoroughly research best practices to complete it!**
+- **Use postman MCP when testing API**
+- **When you want to do something with PostgreSQL database, use supabase MCP Server**
+
+---
+
+### 0. When to use Human-in-the-Loop MCP Tools
+
+1. **Ambiguous Requirements** - When user instructions are unclear
+2. **Decision Points** - When you need user preference between valid alternatives
+3. **Creative Input** - For subjective choices like design or content style
+4. **Sensitive Operations** - Before executing potentially destructive actions
+5. **Missing Information** - When you need specific details not provided
+6. **Quality Feedback** - To get user validation on intermediate results
+
+### 1. Language
+
+* All reasoning and all replies **must be in English**, always. Unless you are trying to guide me something, you **must be replies in Vietnamese**
+
+---
+
+### 2. Before You Start
+
+* **Clarify my request** first (only if necessary to remove ambiguity).
+* **Read the entire codebase** thoroughly. Identify and review **all related files**.
+* **Break the request into small, ordered tasks** and execute them **sequentially** to completion.
+* **Always research best practices** for every requirement, ensuring the **most optimal, maintainable, and scalable** approach.
+* For each requirement, **evaluate applicable SOLID principles and the best design patterns** before implementing.
+
+---
+
+### 3. Scope of Work in the IDE
+
+* You are the **Cursor AI Agent**. **Do everything inside the IDE yourself.**
+* **Do not tell me** to perform IDE actions. You may only ask me to do tasks **outside** the IDE when needed.
+* Learn and follow Cursor tools carefully—**especially `edit_tool`**—and **use them correctly**.
+* Always check Cursor’s latest updates to see what new tools they provide, and use the best available Cursor tools to solve the problem.
+
+---
+
+### 4. Completion Standard
+
+* When I assign a task, **finish it 100%** before ending the chat.
+* **Do not ask** whether to continue or add filler questions. **Do not end** before the task is fully completed.
+
+---
+
+### 5. Command Prompt Usage
+
+#### **Rule: Always Use WSL2 for Commands**
+
+* Whenever a command needs to be executed in **Command Prompt**, always switch to **WSL2**.
+* If the user types a command in Command Prompt, automatically **translate and run it in WSL2**.
+* Never execute directly with `cmd.exe`.
+* Default shell = **wsl.exe** (Ubuntu or installed distro).
+* If there is a choice between `cmd`, `PowerShell`, or `WSL2` → **always pick WSL2**.
+* For paths, file system, or tools → **always prioritize the WSL2 environment**.
+
+---
+
+Do you want me to rewrite this into a **Cursor AI Agent operating rules YAML/Markdown** style so you can drop it directly into your ruleset?
+
+
+---
+
+### 6. API Constraints
+
+* When coding APIs, **do not change existing routes** if that would affect other features or integrations.
+* Do not call any API directly using command prompt. If you need to test an API, ask me to test it instead. I will provide you with the response afterward.
+
+---
+
+### 7. Deliberate Thinking
+
+* Think independently and critically:
+
+  * Identify the user’s problem and constraints.
+  * Consider alternatives and pick the **most optimal** approach.
+  * Ensure you **fully understand the codebase and the impact** of your changes **before** making them.
+* If you are **not clear on any part of the request**, you must **always ask before proceeding**. Never implement anything you don’t fully understand.
+
+---
+
+### 8. Process for Every Request
+
+**Follow this exact checklist for every task:**
+
+1. **Re-read the request** end-to-end; extract scope, constraints, success criteria, and out-of-scope items.
+2. **Open and read `Docs/TO-DO LIST.md`** and any other relevant docs.
+3. **Map the impact**: list all modules/files/functions likely affected; note dependencies and side effects.
+4. **Plan**: break the work into minimal, ordered steps; choose patterns; validate against best practices and SOLID.
+5. **Execute step-by-step** inside the IDE using Cursor tools; keep changes small and review after each step.
+6. **Self-verify**: run linters/tests/type-checks; manually validate the new/changed behavior; check that unrelated flows still work.
+7. **Cleanup**: remove dead code, old implementations superseded by your fix, and any temporary scaffolding.
+8. **Testing**: Run all the unit test and automation test if exists.
+8. **Document**: update or create docs in `Docs/` so code and docs remain consistent.
+9. **Deliver**: summarize what changed, why, files touched, risks, and how to test.
+
+---
+
+### 9. UI/UX Quality Bar
+
+* **Translation of your new requirement:**
+  *When you code the UI, it must be extraordinarily beautiful—stunning—while still matching the current project’s UI. You must read the frontend codebase carefully to understand the existing UI style, use elegant animations, and ensure a UX that is friendly and easy to use.*
+* **Concrete expectations:**
+
+  * **Match the project’s visual language** (framework, design tokens, colors, typography, spacing, components).
+  * **Animations** are tasteful, purposeful, smooth (aim 60 FPS), and appropriately timed (≈150–300 ms) with consistent easing; honor “reduce motion.”
+  * **Usability** first: clear affordances, predictable flows, crisp empty/loading/error states, **responsive** across breakpoints, **accessible** (WCAG 2.1 AA, keyboard/focus states).
+  * **Performance-aware:** minimize JS/CSS, avoid layout thrashing, lazy-load heavy assets.
+  * **Consistency:** reuse existing components; any new components must align with naming, theming, and patterns—no breaking changes.
+
+---
+
+### 10. Security
+
+* **Never hardcode any sensitive data** (API keys, secrets, credentials, tokens, etc.).
+* Always ensure secure configuration and environment variable usage.
+
+---
+
+### 11. Impact Awareness and Verification
+
+* Before starting any request, **analyze which parts of the codebase will be affected**.
+* Ensure that after completing the task, **no unrelated functionality is broken**.
+* Always **check both before and after implementation** to guarantee stability and avoid regressions.
+
+---
+
+### 12. Documentation Consistency
+
+* If the project contains a folder named **`Docs`**, you must:
+
+  * **Search carefully** for all documentation files related to the request **before making any implementation**.
+  * After finishing and verifying the implementation, **update the relevant documentation files** if they are no longer accurate.
+  * Ensure that **code and documentation remain consistent** at all times.
+
+---
+
+### 13. Code Hygiene & Change Discipline
+
+* **Avoid code duplication whenever possible.** Before writing new code, search the codebase for similar logic and **reuse or refactor** to a shared abstraction.
+* **Limit scope of changes.** Only modify code that is **explicitly requested** or **clearly necessary** to fulfill the request. Avoid speculative or unrelated edits.
+* **Keep the codebase clean and organized.** Follow existing conventions for structure, naming, formatting, and documentation. Run formatters/linters.
+* **When fixing bugs or issues using a different pattern/technology**, you **must remove** the **old/superseded implementation** to prevent duplicate logic and reduce technical debt.
+* **Never hardcode values**. Use configuration, environment variables, or constants.
+* **Never use mock data** in **dev, staging, or production** environments. If data is required, use seeded fixtures, test data behind flags, or proper lower-environment data sources.
+
+---
+
+### 14. Always enforce both BDD and TDD
+* Add sufficient unit tests, integration tests, and end-to-end tests for **all new and modified features**. Ensure tests prevent regressions and make the system easier to maintain, extend, and upgrade.
+* **Coverage:** ≥ **80% lines & branches** overall; **≥90%** for core modules; **100%** for new/modified code in PRs.
+* **Mutation testing:** Target **≥60% mutation score** (ideally ≥70%) to avoid “fake” tests.
+* **Scope:** Test only **public behavior** of a unit; **no real network/DB/FS** calls; isolate via dependency injection.
+* **Isolation:** Each test must be **independent**, with no reliance on run order; no shared singletons/global state.
+* **Speed:** Tests must be **fast and deterministic** (no `sleep`); avoid real I/O; full unit suite should run in minutes.
+* **Mocks/Stubs:** Only mock **system boundaries** (HTTP, clock, random, environment, file system). **Do not mock domain logic** unless strictly necessary.
+* **Determinism:** Freeze **time**, seed **random generators**, fix **timezone/locale**, and reset **ENV** after each test.
+* **Test data:** Use **factory/builder patterns**; keep fixtures **small and explicit**; never use real/production data.
+* **Structure:** Follow **Arrange → Act → Assert**; each test should fail for a **single reason**; avoid excessive assertions.
+* **Naming convention:** `Should_<Behavior>_When_<Condition>_Then_<Outcome>` (or Given/When/Then style).
+* **Case coverage:** Include **positive, negative, and edge cases**; boundary values, Unicode, large inputs, exceptions, idempotency.
+* **Assertions:** Check both **returned values** and **side effects** (e.g., call counts, state changes); use **custom assertions** for domain invariants.
+* **Property-based tests (recommended):** Apply for algorithms/data normalization to catch random edge cases.
+* **TDD discipline:** Red → Green → Refactor for each behavior; bug fixes must include **regression tests**.
+* **Anti-flaky policy:** No reliance on real clocks, networks, or timing; detect flaky tests → isolate → **fix before merge**.
+* **CI gates:** PR must **fail** if coverage drops; all logic changes require unit tests; coverage reports must be attached.
+* **Anti-patterns to avoid:** Testing private methods, using opaque snapshots, huge fixtures, order-dependent tests, or real config files.

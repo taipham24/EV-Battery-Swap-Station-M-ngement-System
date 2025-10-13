@@ -10,6 +10,8 @@ public enum BatteryStatus {
     // Extended statuses for inventory management
     FULLY_CHARGED,
     AVAILABLE,
+    IN_USE,
     MAINTENANCE,
-    DAMAGED
+    DAMAGED,
+    QUARANTINED
 }

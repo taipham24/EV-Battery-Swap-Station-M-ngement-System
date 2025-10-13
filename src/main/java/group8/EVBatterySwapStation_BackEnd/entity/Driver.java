@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -38,7 +39,7 @@ public class Driver {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "driver_roles",
             joinColumns = @JoinColumn(name = "driver_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            inverseJoinColumns = @JoinColumn(name = "id"))
     private Set<RoleDetail> roles;
 
     @OneToOne(mappedBy = "driver", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -50,4 +51,17 @@ public class Driver {
     // Dịch vụ đổi pin
     @Column(name = "is_subscribed")
     private boolean isSubscribed; // true nếu đã đăng ký dịch vụ đổi pin
+
+    // Admin management fields
+    @Column(name = "deleted")
+    private boolean deleted = false; // soft delete
+
+    @Column(name = "suspended")
+    private boolean suspended = false; // tạm khóa tài khoản
+
+    @Column(name = "suspension_reason", length = 512)
+    private String suspensionReason;
+
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin; // track login activity
 }

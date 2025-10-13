@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface SubscriptionPlanRepository extends JpaRepository<SubscriptionPlan, Long> {
     List<SubscriptionPlan> findAllByOrderByPriceAsc();
+    List<SubscriptionPlan> findAllByActiveTrueOrderByPriceAsc();
 }

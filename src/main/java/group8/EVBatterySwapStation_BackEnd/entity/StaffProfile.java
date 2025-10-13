@@ -3,6 +3,7 @@ package group8.EVBatterySwapStation_BackEnd.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -27,5 +28,15 @@ public class StaffProfile {
     private Station station;
 
     private String workShift;
+
+    // Admin management fields
+    @Column(name = "assigned_date")
+    private LocalDateTime assignedDate;
+
+    @Column(name = "active")
+    private boolean active = true;
+
+    @Column(name = "notes", length = 512)
+    private String notes; // admin notes about staff
 
 }

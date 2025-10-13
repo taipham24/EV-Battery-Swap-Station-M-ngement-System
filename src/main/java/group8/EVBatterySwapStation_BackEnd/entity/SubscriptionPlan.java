@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "subscription_plan")
 @Data
@@ -36,4 +38,25 @@ public class SubscriptionPlan {
     @Column(name = "swap_limit")
     private Integer swapLimit;
 
+    @Column(name = "price_per_swap")
+    private Double pricePerSwap; // giá khi KHÔNG có gói thuê (per-swap)
+
+    @Column(name = "price_per_extra_swap")
+    private Double pricePerExtraSwap; // giá khi vượt giới hạn trong gói
+
+    // Admin management fields
+    @Column(name = "active")
+    private boolean active = true; // enable/disable plan
+
+    @Column(name = "display_order")
+    private Integer displayOrder = 0; // for sorting in UI
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "features", columnDefinition = "TEXT")
+    private String features; // JSON string of features
 }

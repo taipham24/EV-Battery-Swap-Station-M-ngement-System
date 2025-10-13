@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+
 @Repository
 public interface BatteryRepository extends JpaRepository<Battery, Long>, JpaSpecificationExecutor<Battery> {
     List<Battery> findByStationAndStatus(Station station, BatteryStatus status);
@@ -20,4 +21,6 @@ public interface BatteryRepository extends JpaRepository<Battery, Long>, JpaSpec
     Optional<Battery> findFirstByStationAndStatus(Station station, BatteryStatus status);
 
     long countByStationAndStatus(Station station, BatteryStatus status);
+    
+    long countByStation_StationId(Long stationId);
 }
