@@ -48,6 +48,12 @@ public enum ErrorCode {
     COMPLAINT_NOT_FOUND(9001, "Complaint not found", HttpStatusCode.valueOf(404)),
     COMPLAINT_ALREADY_RESOLVED(9002, "Complaint already resolved", HttpStatusCode.valueOf(409)),
     INVALID_COMPLAINT_STATUS(9003, "Invalid complaint status", HttpStatusCode.valueOf(400)),
+    STAFF_NOT_FOUND(10015, "Staff not found", HttpStatusCode.valueOf(404)),
+    STAFF_ALREADY_ASSIGNED(10016, "Staff is already assigned to a station", HttpStatusCode.valueOf(400)),
+    SUBSCRIPTION_PLAN_NOT_FOUND(10017, "Subscription plan not found", HttpStatusCode.valueOf(404)),
+    ROLE_NOT_FOUND(10018, "Role not found", HttpStatusCode.valueOf(404)),
+    STATION_NOT_FOUND(10019, "Station not found", HttpStatusCode.valueOf(404)),
+    DRIVER_NOT_FOUND(10020, "Driver not found", HttpStatusCode.valueOf(404)),
     ;
 
     @Getter
