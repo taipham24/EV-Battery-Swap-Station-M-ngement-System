@@ -40,6 +40,6 @@ public class Battery {
     @Column(name = "model", nullable = false, length = 128)
     private String model;
 
-    @OneToOne(mappedBy = "battery", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Vehicle vehicle; // Pin hiện đang gắn trên xe
+    @OneToOne(mappedBy = "battery", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private DriverSubscription driverSubscription; // Pin hiện đang gắn trên xe
 }

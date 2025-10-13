@@ -21,25 +21,25 @@ import org.springframework.web.bind.annotation.*;
 public class SwapController {
     private final SwapService swapService;
 
-    @PreAuthorize("hasRole('STAFF') or hasRole('MANAGER')")
+    @PreAuthorize("hasAuthority('STAFF') or hasAuthority('MANAGER')")
     @PostMapping("/{bookingId}/confirm")
     public ApiResponse<SwapTransactionDTO> confirm(@PathVariable Long bookingId) {
         return ApiResponse.success(swapService.confirm(bookingId));
     }
 
-    @PreAuthorize("hasRole('STAFF') or hasRole('MANAGER')")
+    @PreAuthorize("hasAuthority('STAFF') or hasAuthority('MANAGER')")
     @PostMapping("/{swapId}/pay")
     public ApiResponse<PaymentDTO> pay(@PathVariable Long swapId, @RequestBody SwapPaymentRequest request) {
         return ApiResponse.success(swapService.pay(swapId, request));
     }
 
-    @PreAuthorize("hasRole('STAFF') or hasRole('MANAGER')")
+    @PreAuthorize("hasAuthority('STAFF') or hasAuthority('MANAGER')")
     @PostMapping("/{swapId}/inspect-return")
     public ApiResponse<BatteryInspectionDTO> inspect(@PathVariable Long swapId, @RequestBody InspectReturnRequest request) {
         return ApiResponse.success(swapService.inspectReturn(swapId, request));
     }
 
-    @PreAuthorize("hasRole('STAFF') or hasRole('MANAGER')")
+    @PreAuthorize("hasAuthority('STAFF') or hasAuthority('MANAGER')")
     @GetMapping("")
     public ApiResponse<Page<SwapTransactionDTO>> list(
             @RequestParam(required = false) Long driverId,

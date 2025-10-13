@@ -29,7 +29,7 @@ public class SubscriptionPlanController {
     private final SubscriptionPlanService subscriptionPlanService;
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Create new subscription plan")
     public ResponseEntity<ApiResponse<SubscriptionPlan>> createSubscription(
             @Parameter(description = "Subscription plan data") @Valid @RequestBody SubscriptionPlanRequest request) {
@@ -47,7 +47,7 @@ public class SubscriptionPlanController {
         plan.setDisplayOrder(0);
 
         SubscriptionPlan createdPlan = subscriptionPlanService.createSubscription(plan);
-        
+
         return ResponseEntity.ok(ApiResponse.<SubscriptionPlan>builder()
                 .code(200)
                 .message("Subscription plan created successfully")
@@ -59,9 +59,9 @@ public class SubscriptionPlanController {
     @Operation(summary = "Get all active subscription plans sorted by price")
     public ResponseEntity<ApiResponse<List<SubscriptionPlan>>> getPlansSortedByPrice() {
         log.info("Getting subscription plans sorted by price");
-        
+
         List<SubscriptionPlan> plans = subscriptionPlanService.getAllPlansSortedByPrice();
-        
+
         return ResponseEntity.ok(ApiResponse.<List<SubscriptionPlan>>builder()
                 .code(200)
                 .message("Subscription plans retrieved successfully")
@@ -70,13 +70,13 @@ public class SubscriptionPlanController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Get all subscription plans (including inactive)")
     public ResponseEntity<ApiResponse<List<SubscriptionPlan>>> getAllPlans() {
         log.info("Admin getting all subscription plans");
-        
+
         List<SubscriptionPlan> plans = subscriptionPlanService.getAllPlans();
-        
+
         return ResponseEntity.ok(ApiResponse.<List<SubscriptionPlan>>builder()
                 .code(200)
                 .message("All subscription plans retrieved successfully")
@@ -85,13 +85,13 @@ public class SubscriptionPlanController {
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Update subscription plan")
     public ResponseEntity<ApiResponse<SubscriptionPlan>> update(
-            @Parameter(description = "Plan ID") @PathVariable Long id, 
+            @Parameter(description = "Plan ID") @PathVariable Long id,
             @Parameter(description = "Updated plan data") @Valid @RequestBody SubscriptionPlanRequest request) {
         log.info("Admin updating subscription plan {} with data: {}", id, request);
-        
+
         SubscriptionPlan updatedPlan = new SubscriptionPlan();
         updatedPlan.setName(request.getName());
         updatedPlan.setDescription(request.getDescription());
@@ -100,9 +100,9 @@ public class SubscriptionPlanController {
         updatedPlan.setSwapLimit(request.getSwapLimit());
         updatedPlan.setPricePerSwap(request.getPricePerSwap());
         updatedPlan.setPricePerExtraSwap(request.getPricePerExtraSwap());
-        
+
         SubscriptionPlan plan = subscriptionPlanService.update(id, updatedPlan);
-        
+
         return ResponseEntity.ok(ApiResponse.<SubscriptionPlan>builder()
                 .code(200)
                 .message("Subscription plan updated successfully")
@@ -111,14 +111,14 @@ public class SubscriptionPlanController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Deactivate subscription plan")
     public ResponseEntity<ApiResponse<Void>> deactivatePlan(
             @Parameter(description = "Plan ID") @PathVariable Long id) {
         log.info("Admin deactivating subscription plan {}", id);
-        
+
         subscriptionPlanService.deactivatePlan(id);
-        
+
         return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Subscription plan deactivated successfully")
@@ -126,15 +126,15 @@ public class SubscriptionPlanController {
     }
 
     @GetMapping("/{id}/subscribers")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Get subscribers of a specific plan")
     public ResponseEntity<ApiResponse<Page<DriverSubscription>>> getPlanSubscribers(
             @Parameter(description = "Plan ID") @PathVariable Long id,
             @Parameter(description = "Pagination parameters") Pageable pageable) {
         log.info("Admin getting subscribers for plan {}", id);
-        
+
         Page<DriverSubscription> subscribers = subscriptionPlanService.getPlanSubscribers(id, pageable);
-        
+
         return ResponseEntity.ok(ApiResponse.<Page<DriverSubscription>>builder()
                 .code(200)
                 .message("Plan subscribers retrieved successfully")
@@ -143,14 +143,14 @@ public class SubscriptionPlanController {
     }
 
     @GetMapping("/{id}/statistics")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Get subscription plan statistics")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getPlanStatistics(
             @Parameter(description = "Plan ID") @PathVariable Long id) {
         log.info("Admin getting statistics for plan {}", id);
-        
+
         Map<String, Object> statistics = subscriptionPlanService.getPlanStatistics(id);
-        
+
         return ResponseEntity.ok(ApiResponse.<Map<String, Object>>builder()
                 .code(200)
                 .message("Plan statistics retrieved successfully")

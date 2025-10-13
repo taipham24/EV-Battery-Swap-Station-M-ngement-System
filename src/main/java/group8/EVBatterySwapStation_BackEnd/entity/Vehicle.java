@@ -36,7 +36,4 @@ public class Vehicle {
     @JoinColumn(name = "driver_id", unique = true) // unique đảm bảo 1-1
     private Driver driver;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "battery_id", unique = true) // unique đảm bảo 1-1
-    private Battery battery; // Pin hiện đang gắn trên xe
 }

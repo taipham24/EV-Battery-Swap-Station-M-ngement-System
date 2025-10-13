@@ -9,6 +9,4 @@ public class VehicleRegistrationRequest {
     private String model;
     private String manufacturer;
     private String imageUrl;
-    private Long driverId;
-    private Long batteryId; // Pin hiện đang gắn trên xe
 }

@@ -25,7 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Admin Customer Management", description = "Admin endpoints for customer management")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class CustomerManagementController {
 
     private final CustomerManagementService customerManagementService;
@@ -35,9 +35,9 @@ public class CustomerManagementController {
     public ResponseEntity<ApiResponse<Page<CustomerDetailResponse>>> getAllCustomers(
             @Parameter(description = "Filter criteria") CustomerFilterRequest filter) {
         log.info("Admin getting all customers with filter: {}", filter);
-        
+
         Page<CustomerDetailResponse> customers = customerManagementService.getAllCustomers(filter);
-        
+
         return ResponseEntity.ok(ApiResponse.<Page<CustomerDetailResponse>>builder()
                 .code(200)
                 .message("Customers retrieved successfully")
@@ -50,9 +50,9 @@ public class CustomerManagementController {
     public ResponseEntity<ApiResponse<CustomerDetailResponse>> getCustomerDetail(
             @Parameter(description = "Customer ID") @PathVariable Long id) {
         log.info("Admin getting customer detail for ID: {}", id);
-        
+
         CustomerDetailResponse customer = customerManagementService.getCustomerDetail(id);
-        
+
         return ResponseEntity.ok(ApiResponse.<CustomerDetailResponse>builder()
                 .code(200)
                 .message("Customer detail retrieved successfully")
@@ -66,9 +66,9 @@ public class CustomerManagementController {
             @Parameter(description = "Customer ID") @PathVariable Long id,
             @Parameter(description = "Customer update data") @Valid @RequestBody UpdateCustomerRequest request) {
         log.info("Admin updating customer {} with data: {}", id, request);
-        
+
         CustomerDetailResponse updatedCustomer = customerManagementService.updateCustomer(id, request);
-        
+
         return ResponseEntity.ok(ApiResponse.<CustomerDetailResponse>builder()
                 .code(200)
                 .message("Customer updated successfully")
@@ -82,9 +82,9 @@ public class CustomerManagementController {
             @Parameter(description = "Customer ID") @PathVariable Long id,
             @Parameter(description = "Suspension reason") @RequestParam String reason) {
         log.info("Admin suspending customer {} with reason: {}", id, reason);
-        
+
         customerManagementService.suspendCustomer(id, reason);
-        
+
         return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Customer suspended successfully")
@@ -96,9 +96,9 @@ public class CustomerManagementController {
     public ResponseEntity<ApiResponse<Void>> unsuspendCustomer(
             @Parameter(description = "Customer ID") @PathVariable Long id) {
         log.info("Admin unsuspending customer {}", id);
-        
+
         customerManagementService.unsuspendCustomer(id);
-        
+
         return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Customer unsuspended successfully")
@@ -110,9 +110,9 @@ public class CustomerManagementController {
     public ResponseEntity<ApiResponse<Void>> deleteCustomer(
             @Parameter(description = "Customer ID") @PathVariable Long id) {
         log.info("Admin soft deleting customer {}", id);
-        
+
         customerManagementService.deleteCustomer(id);
-        
+
         return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(200)
                 .message("Customer deleted successfully")
@@ -124,9 +124,9 @@ public class CustomerManagementController {
     public ResponseEntity<ApiResponse<List<SubscriptionHistoryResponse>>> getCustomerSubscriptionHistory(
             @Parameter(description = "Customer ID") @PathVariable Long id) {
         log.info("Admin getting subscription history for customer {}", id);
-        
+
         List<SubscriptionHistoryResponse> subscriptions = customerManagementService.getCustomerSubscriptionHistory(id);
-        
+
         return ResponseEntity.ok(ApiResponse.<List<SubscriptionHistoryResponse>>builder()
                 .code(200)
                 .message("Subscription history retrieved successfully")
@@ -139,9 +139,9 @@ public class CustomerManagementController {
     public ResponseEntity<ApiResponse<Map<String, Object>>> getCustomerStatistics(
             @Parameter(description = "Customer ID") @PathVariable Long id) {
         log.info("Admin getting statistics for customer {}", id);
-        
+
         Map<String, Object> statistics = customerManagementService.getCustomerStatistics(id);
-        
+
         return ResponseEntity.ok(ApiResponse.<Map<String, Object>>builder()
                 .code(200)
                 .message("Customer statistics retrieved successfully")

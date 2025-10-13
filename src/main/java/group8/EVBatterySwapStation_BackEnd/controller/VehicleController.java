@@ -36,15 +36,12 @@ public class VehicleController {
         if (!driver.isSubscribed()) {
             throw new IllegalStateException("Driver chưa đăng ký dịch vụ đổi pin");
         }
-        Battery battery = batteryRepository.findById(request.getBatteryId())
-                .orElseThrow(() -> new RuntimeException("Battery not found with ID: " + request.getBatteryId()));
         Vehicle vehicle = new Vehicle();
         vehicle.setVin(request.getVin());
         vehicle.setBatteryType(request.getBatteryType());
         vehicle.setModel(request.getModel());
         vehicle.setManufacturer(request.getManufacturer());
         vehicle.setImageUrl(request.getImageUrl());
-        vehicle.setBattery(battery); // Gán pin hiện tại cho xe
         vehicle.setDriver(driver);
 
         Vehicle registeredVehicle = vehicleService.registerVehicle(vehicle);

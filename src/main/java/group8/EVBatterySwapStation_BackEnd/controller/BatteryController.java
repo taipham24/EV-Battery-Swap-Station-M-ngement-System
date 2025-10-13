@@ -26,7 +26,7 @@ public class BatteryController {
     private final BatteryAnalyticsService batteryAnalyticsService;
 
     @PostMapping("/station/{stationId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Battery> addBatteryToStation(
             @PathVariable Long stationId,
             @RequestParam BatteryStatus status
@@ -35,7 +35,7 @@ public class BatteryController {
     }
 
     @GetMapping("/station/{stationId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<Battery>> getBatteriesByStation(
             @PathVariable Long stationId,
             @RequestParam(required = false) BatteryStatus status
@@ -44,7 +44,7 @@ public class BatteryController {
     }
 
     @GetMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<Battery>> listBatteries(
             @RequestParam(required = false) BatteryStatus status,
             @RequestParam(required = false) String model,
@@ -72,13 +72,13 @@ public class BatteryController {
     }
 
     @GetMapping("/{id}/health")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<BatteryHealthMetrics> getBatteryHealth(@PathVariable Long id) {
         return ResponseEntity.ok(batteryAnalyticsService.calculateBatteryHealth(id));
     }
 
     @GetMapping("/{id}/history")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<BatteryHealthMetrics.UsageEvent>> getBatteryUsageHistory(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page,
@@ -89,7 +89,7 @@ public class BatteryController {
     }
 
     @GetMapping("/{id}/inspections")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<BatteryHealthMetrics.InspectionSummary>> getBatteryInspectionHistory(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page,
@@ -100,13 +100,13 @@ public class BatteryController {
     }
 
     @GetMapping("/health-report")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Map<String, Object>> getSystemWideBatteryHealthReport() {
         return ResponseEntity.ok(batteryAnalyticsService.getSystemWideBatteryHealthReport());
     }
 
     @PatchMapping("/{id}/status")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Battery> updateStatus(
             @PathVariable Long id,
             @RequestBody UpdateStatusRequest request

@@ -17,23 +17,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/battery-transfers")
 @RequiredArgsConstructor
 public class BatteryTransferController {
-    
+
     private final BatteryTransferService batteryTransferService;
 
     @PostMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<BatteryTransferDTO> initiateTransfer(@Valid @RequestBody BatteryTransferRequest request) {
         return ResponseEntity.ok(batteryTransferService.initiateTransfer(request));
     }
 
     @PostMapping("/{id}/complete")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('STAFF')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('STAFF')")
     public ResponseEntity<BatteryTransferDTO> completeTransfer(@PathVariable Long id) {
         return ResponseEntity.ok(batteryTransferService.completeTransfer(id));
     }
 
     @PostMapping("/{id}/cancel")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<BatteryTransferDTO> cancelTransfer(
             @PathVariable Long id,
             @RequestParam String reason) {
@@ -41,7 +41,7 @@ public class BatteryTransferController {
     }
 
     @GetMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<BatteryTransferDTO>> listTransfers(
             @RequestParam(required = false) Long stationId,
             @RequestParam(required = false) TransferStatus status,
@@ -53,7 +53,7 @@ public class BatteryTransferController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<BatteryTransferDTO> getTransferById(@PathVariable Long id) {
         return ResponseEntity.ok(batteryTransferService.getTransferById(id));
     }

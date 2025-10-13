@@ -29,7 +29,7 @@ public class DriverController {
     }
 
     @GetMapping("/getDrivers")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ApiResponse<List<DriverResponse>> getAllDriver() {
         ApiResponse<List<DriverResponse>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(driverService.getAllDrivers());
@@ -37,7 +37,7 @@ public class DriverController {
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ApiResponse<DriverResponse> getUser(@PathVariable("id") Long driverId) {
         ApiResponse<DriverResponse> apiResponse = new ApiResponse<>();
         apiResponse.setResult(driverService.getUser(driverId));

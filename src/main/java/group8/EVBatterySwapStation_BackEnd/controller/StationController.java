@@ -23,25 +23,25 @@ public class StationController {
     private final StationService stationService;
 
     @PostMapping("/stations")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Station> createStation(@RequestBody StationRequest request) {
         return ResponseEntity.ok(stationService.createStation(request));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Station> updateStation(@PathVariable Long id, @RequestBody StationRequest request) {
         return ResponseEntity.ok(stationService.updateStation(id, request));
     }
 
     @GetMapping("/{id}/detail")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<StationDetailResponse> getStationDetail(@PathVariable Long id) {
         return ResponseEntity.ok(stationService.getStationDetail(id));
     }
 
     @GetMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<Station>> getAllStations(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -68,7 +68,7 @@ public class StationController {
     }
 
     @DeleteMapping("/{stationId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteStation(@PathVariable Long stationId) {
         stationService.deleteStation(stationId);
         return ResponseEntity.noContent().build();

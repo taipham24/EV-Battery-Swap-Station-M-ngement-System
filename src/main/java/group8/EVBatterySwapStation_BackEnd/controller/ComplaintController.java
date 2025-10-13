@@ -21,17 +21,17 @@ import java.util.Map;
 @RequestMapping("/api/complaints")
 @RequiredArgsConstructor
 public class ComplaintController {
-    
+
     private final ComplaintService complaintService;
 
     @PostMapping("")
-    @PreAuthorize("hasRole('DRIVER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('DRIVER') or hasAuthority('ADMIN')")
     public ResponseEntity<ComplaintDTO> submitComplaint(@Valid @RequestBody ComplaintRequest request) {
         return ResponseEntity.ok(complaintService.submitComplaint(request));
     }
 
     @GetMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Page<ComplaintDTO>> listComplaints(
             @RequestParam(required = false) ComplaintStatus status,
             @RequestParam(required = false) ComplaintType type,
@@ -43,7 +43,7 @@ public class ComplaintController {
     }
 
     @GetMapping("/my")
-    @PreAuthorize("hasRole('DRIVER')")
+    @PreAuthorize("hasAuthority('DRIVER')")
     public ResponseEntity<Page<ComplaintDTO>> getMyComplaints(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
@@ -56,13 +56,13 @@ public class ComplaintController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DRIVER')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('DRIVER')")
     public ResponseEntity<ComplaintDTO> getComplaintById(@PathVariable Long id) {
         return ResponseEntity.ok(complaintService.getComplaintById(id));
     }
 
     @PutMapping("/{id}/status")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ComplaintDTO> updateComplaintStatus(
             @PathVariable Long id,
             @RequestParam ComplaintStatus status) {
@@ -70,7 +70,7 @@ public class ComplaintController {
     }
 
     @PostMapping("/{id}/resolve")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ComplaintDTO> resolveComplaint(
             @PathVariable Long id,
             @Valid @RequestBody ComplaintResolutionRequest request) {
@@ -78,7 +78,7 @@ public class ComplaintController {
     }
 
     @GetMapping("/statistics")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Map<String, Object>> getComplaintStatistics() {
         return ResponseEntity.ok(complaintService.getComplaintStatistics());
     }

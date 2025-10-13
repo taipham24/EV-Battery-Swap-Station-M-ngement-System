@@ -24,7 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Admin Analytics", description = "Admin endpoints for analytics and reporting")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class AnalyticsController {
 
     private final AnalyticsService analyticsService;
@@ -34,9 +34,9 @@ public class AnalyticsController {
     public ResponseEntity<ApiResponse<RevenueReportResponse>> getRevenueReport(
             @Parameter(description = "Date range and period") @Valid DateRangeRequest request) {
         log.info("Admin getting revenue report for period: {} to {}", request.getStartDate(), request.getEndDate());
-        
+
         RevenueReportResponse report = analyticsService.getRevenueReport(request);
-        
+
         return ResponseEntity.ok(ApiResponse.<RevenueReportResponse>builder()
                 .code(200)
                 .message("Revenue report retrieved successfully")
@@ -49,9 +49,9 @@ public class AnalyticsController {
     public ResponseEntity<ApiResponse<Map<String, Object>>> getRevenueByStation(
             @Parameter(description = "Date range and period") @Valid DateRangeRequest request) {
         log.info("Admin getting revenue by station for period: {} to {}", request.getStartDate(), request.getEndDate());
-        
+
         Map<String, Object> revenueByStation = analyticsService.getRevenueByStation(request);
-        
+
         return ResponseEntity.ok(ApiResponse.<Map<String, Object>>builder()
                 .code(200)
                 .message("Revenue by station retrieved successfully")
@@ -64,9 +64,9 @@ public class AnalyticsController {
     public ResponseEntity<ApiResponse<Map<String, Object>>> getRevenueByPaymentMethod(
             @Parameter(description = "Date range and period") @Valid DateRangeRequest request) {
         log.info("Admin getting revenue by payment method for period: {} to {}", request.getStartDate(), request.getEndDate());
-        
+
         Map<String, Object> revenueByPaymentMethod = analyticsService.getRevenueByPaymentMethod(request);
-        
+
         return ResponseEntity.ok(ApiResponse.<Map<String, Object>>builder()
                 .code(200)
                 .message("Revenue by payment method retrieved successfully")
@@ -79,9 +79,9 @@ public class AnalyticsController {
     public ResponseEntity<ApiResponse<SwapAnalyticsResponse>> getSwapAnalytics(
             @Parameter(description = "Date range and period") @Valid DateRangeRequest request) {
         log.info("Admin getting swap analytics for period: {} to {}", request.getStartDate(), request.getEndDate());
-        
+
         SwapAnalyticsResponse analytics = analyticsService.getSwapAnalytics(request);
-        
+
         return ResponseEntity.ok(ApiResponse.<SwapAnalyticsResponse>builder()
                 .code(200)
                 .message("Swap analytics retrieved successfully")
@@ -94,9 +94,9 @@ public class AnalyticsController {
     public ResponseEntity<ApiResponse<List<PeakHourAnalysis>>> getPeakHoursAnalysis(
             @Parameter(description = "Date range and period") @Valid DateRangeRequest request) {
         log.info("Admin getting peak hours analysis for period: {} to {}", request.getStartDate(), request.getEndDate());
-        
+
         List<PeakHourAnalysis> peakHours = analyticsService.getPeakHoursAnalysis(request);
-        
+
         return ResponseEntity.ok(ApiResponse.<List<PeakHourAnalysis>>builder()
                 .code(200)
                 .message("Peak hours analysis retrieved successfully")
@@ -109,9 +109,9 @@ public class AnalyticsController {
     public ResponseEntity<ApiResponse<Map<String, Object>>> getSwapHeatmapData(
             @Parameter(description = "Date range and period") @Valid DateRangeRequest request) {
         log.info("Admin getting swap heatmap data for period: {} to {}", request.getStartDate(), request.getEndDate());
-        
+
         Map<String, Object> heatmapData = analyticsService.getSwapHeatmapData(request);
-        
+
         return ResponseEntity.ok(ApiResponse.<Map<String, Object>>builder()
                 .code(200)
                 .message("Swap heatmap data retrieved successfully")
@@ -124,9 +124,9 @@ public class AnalyticsController {
     public ResponseEntity<ApiResponse<Map<String, Object>>> getSwapFrequencyReport(
             @Parameter(description = "Date range and period") @Valid DateRangeRequest request) {
         log.info("Admin getting swap frequency report for period: {} to {}", request.getStartDate(), request.getEndDate());
-        
+
         Map<String, Object> frequencyReport = analyticsService.getSwapFrequencyReport(request);
-        
+
         return ResponseEntity.ok(ApiResponse.<Map<String, Object>>builder()
                 .code(200)
                 .message("Swap frequency report retrieved successfully")
@@ -138,9 +138,9 @@ public class AnalyticsController {
     @Operation(summary = "Get dashboard summary")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getDashboardSummary() {
         log.info("Admin getting dashboard summary");
-        
+
         Map<String, Object> summary = analyticsService.getDashboardSummary();
-        
+
         return ResponseEntity.ok(ApiResponse.<Map<String, Object>>builder()
                 .code(200)
                 .message("Dashboard summary retrieved successfully")

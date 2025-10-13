@@ -32,13 +32,13 @@ public class BookingController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAuthority('STAFF')")
     @PostMapping("/{bookingId}/confirm")
     public ResponseEntity<BookingResponse> confirmBooking(@PathVariable Long bookingId, @PathVariable Long staffId) {
         return ResponseEntity.ok(bookingService.confirmBooking(bookingId, staffId));
     }
 
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAuthority('STAFF')")
     @PostMapping("/{bookingId}/cancel")
     public ResponseEntity<BookingResponse> rejectBooking(@PathVariable Long bookingId, @PathVariable Long staffId) {
         return ResponseEntity.ok(bookingService.rejectBooking(bookingId, staffId));

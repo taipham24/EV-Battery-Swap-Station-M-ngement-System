@@ -40,6 +40,10 @@ public class DriverSubscription {
     private boolean autoRenew;
 
     @OneToOne
+    @JoinColumn(name = "battery_id")
+    private Battery battery;
+
+    @OneToOne
     @JoinColumn(name = "payment_id")
     private Payment payment;
 }
