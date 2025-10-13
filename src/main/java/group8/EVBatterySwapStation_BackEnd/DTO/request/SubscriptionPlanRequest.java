@@ -20,4 +20,10 @@ public class SubscriptionPlanRequest {
     private Integer durationDays;
 
     private Integer swapLimit; // null = không giới hạn
+    
+    @Min(value = 0, message = "Price per swap must be non-negative")
+    private double pricePerSwap;
+    
+    @Min(value = 0, message = "Price per extra swap must be non-negative")
+    private double pricePerExtraSwap;
 }

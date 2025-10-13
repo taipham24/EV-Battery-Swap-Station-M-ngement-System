@@ -10,7 +10,10 @@ import java.time.LocalDateTime;
 @Table(name = "swap_transaction",
         indexes = {
                 @Index(name = "idx_swap_station_status_created", columnList = "station_id,status,created_at"),
-                @Index(name = "idx_swap_driver_created", columnList = "driver_id,created_at")
+                @Index(name = "idx_swap_driver_created", columnList = "driver_id,created_at"),
+                @Index(name = "idx_swap_created_at", columnList = "created_at"),
+                @Index(name = "idx_swap_station_created", columnList = "station_id,created_at"),
+                @Index(name = "idx_swap_status_created", columnList = "status,created_at")
         })
 @Getter
 @Setter
