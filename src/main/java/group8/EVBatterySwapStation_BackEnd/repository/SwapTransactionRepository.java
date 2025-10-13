@@ -58,7 +58,3 @@ public interface SwapTransactionRepository extends JpaRepository<SwapTransaction
            "WHERE s.createdAt BETWEEN :startDate AND :endDate GROUP BY s.status")
     List<Object[]> calculateSwapsByStatus(@Param("startDate") LocalDateTime start, @Param("endDate") LocalDateTime end);
 }
-
-
-
-

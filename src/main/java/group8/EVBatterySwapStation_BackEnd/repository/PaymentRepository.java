@@ -23,7 +23,3 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Query("SELECT SUM(p.amountVnd) FROM Payment p WHERE p.paidAt BETWEEN :startDate AND :endDate AND p.status = 'SUCCESS'")
     Long calculateTotalPayments(@Param("startDate") LocalDateTime start, @Param("endDate") LocalDateTime end);
 }
-
-
-
-

@@ -33,9 +33,13 @@ public class Battery {
     @Enumerated(EnumType.STRING)
     private BatteryStatus status;
 
+
     @Column(name = "capacity_wh", nullable = false)
     private Integer capacityWh;
 
     @Column(name = "model", nullable = false, length = 128)
     private String model;
+
+    @OneToOne(mappedBy = "battery", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Vehicle vehicle; // Pin hiện đang gắn trên xe
 }

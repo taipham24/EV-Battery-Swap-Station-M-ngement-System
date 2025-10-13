@@ -35,14 +35,11 @@ public class DriverSubscriptionImpl implements DriverSubscriptionService {
         Long driverId = SecurityUtils.currentUserId();
         SubscriptionPlan plan = subscriptionPlanRepository.findById(request.getPlanId())
                 .orElseThrow(() -> new AppException(ErrorCode.SUBSCRIPTION_NOT_FOUND));
-        Battery battery = batteryRepository.findById(request.getBatteryId())
-                .orElseThrow(() -> new AppException(ErrorCode.BATTERY_NOT_FOUND));
         Driver driver = new Driver();
         driver.setDriverId(driverId);
         DriverSubscription sub = new DriverSubscription();
         sub.setDriver(driver);
         sub.setPlan(plan);
-        sub.setBattery(battery);
         sub.setStartDate(LocalDateTime.now());
         sub.setEndDate(LocalDateTime.now().plusDays(plan.getDurationDays()));
         sub.setSwapsUsed(0);
@@ -59,6 +56,24 @@ public class DriverSubscriptionImpl implements DriverSubscriptionService {
                 .orElseThrow(() -> new AppException(ErrorCode.SUBSCRIPTION_INACTIVE));
     }
 
+    @Override
+    public List<DriverSubscription> getAllSubscriptionsForDriver(Long driverId) {
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new AppException(ErrorCode.DRIVER_NOT_EXISTED));
+        return repository.findByDriver(driver);
+    }
+    @Override
+    public DriverSubscription cancelSubscription(Long subscriptionId) {
+        DriverSubscription sub = repository.findById(subscriptionId)
+                .orElseThrow(() -> new AppException(ErrorCode.SUBSCRIPTION_NOT_FOUND));
+        if (!sub.isActive()) {
+            throw new AppException(ErrorCode.SUBSCRIPTION_INACTIVE);
+        }
+        sub.setActive(false);
+        return repository.save(sub);
+    }
+
+    @Override
     public void checkAndExpireSubscriptions() {
         List<DriverSubscription> all = repository.findAll();
         LocalDateTime now = LocalDateTime.now();

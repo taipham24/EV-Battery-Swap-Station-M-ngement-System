@@ -25,6 +25,9 @@ public class VehicleImpl implements VehicleService {
         if (vehicle.getManufacturer() == null || vehicle.getManufacturer().isEmpty()) {
             throw new IllegalArgumentException("Manufacturer is required");
         }
+        if (vehicle.getBattery() != null) {
+            throw new IllegalArgumentException("New vehicle cannot have an associated battery");
+        }
         return vehicleRepository.save(vehicle);
     }
 }

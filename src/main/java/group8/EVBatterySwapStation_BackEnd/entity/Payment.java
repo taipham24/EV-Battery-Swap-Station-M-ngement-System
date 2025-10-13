@@ -47,7 +47,3 @@ public class Payment {
     @JoinColumn(name = "cashier_staff_id")
     private StaffProfile cashier;
 }
-
-
-
-

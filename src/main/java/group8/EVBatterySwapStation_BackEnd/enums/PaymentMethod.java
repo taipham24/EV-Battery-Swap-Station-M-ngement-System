@@ -6,6 +6,3 @@ public enum PaymentMethod {
     CREDIT_CARD,
     QR_OFFLINE
 }
-
-
-

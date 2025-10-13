@@ -67,7 +67,3 @@ public class SwapTransaction {
     @Column(name = "notes", length = 512)
     private String notes;
 }
-
-
-
-

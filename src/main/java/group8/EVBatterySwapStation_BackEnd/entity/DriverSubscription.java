@@ -27,10 +27,6 @@ public class DriverSubscription {
     @JoinColumn(name = "plan_id")
     private SubscriptionPlan plan;
 
-    @ManyToOne
-    @JoinColumn(name = "battery_id", nullable = false)
-    private Battery battery;
-
     @Column(name = "start_date")
     private LocalDateTime startDate;
 
@@ -42,4 +38,8 @@ public class DriverSubscription {
 
     @Column(name = "auto_renew")
     private boolean autoRenew;
+
+    @OneToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 }
