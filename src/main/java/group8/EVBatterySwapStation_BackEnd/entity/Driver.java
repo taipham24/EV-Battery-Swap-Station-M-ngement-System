@@ -38,7 +38,7 @@ public class Driver {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "driver_roles",
             joinColumns = @JoinColumn(name = "driver_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            inverseJoinColumns = @JoinColumn(name = "id"))
     private Set<RoleDetail> roles;
 
     @OneToOne(mappedBy = "driver", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

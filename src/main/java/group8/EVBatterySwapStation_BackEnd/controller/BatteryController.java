@@ -1,8 +1,10 @@
 package group8.EVBatterySwapStation_BackEnd.controller;
 
 import group8.EVBatterySwapStation_BackEnd.DTO.request.UpdateStatusRequest;
+import group8.EVBatterySwapStation_BackEnd.DTO.response.BatteryHealthMetrics;
 import group8.EVBatterySwapStation_BackEnd.entity.Battery;
 import group8.EVBatterySwapStation_BackEnd.enums.BatteryStatus;
+import group8.EVBatterySwapStation_BackEnd.service.BatteryAnalyticsService;
 import group8.EVBatterySwapStation_BackEnd.service.BatteryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,9 +23,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BatteryController {
     private final BatteryService batteryService;
+    private final BatteryAnalyticsService batteryAnalyticsService;
 
     @PostMapping("/station/{stationId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Battery> addBatteryToStation(
             @PathVariable Long stationId,
             @RequestParam BatteryStatus status
@@ -32,7 +35,7 @@ public class BatteryController {
     }
 
     @GetMapping("/station/{stationId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Battery>> getBatteriesByStation(
             @PathVariable Long stationId,
             @RequestParam(required = false) BatteryStatus status
@@ -41,7 +44,7 @@ public class BatteryController {
     }
 
     @GetMapping("")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<Battery>> listBatteries(
             @RequestParam(required = false) BatteryStatus status,
             @RequestParam(required = false) String model,
@@ -68,8 +71,42 @@ public class BatteryController {
         return ResponseEntity.ok(batteryService.summary(stationId, buckets));
     }
 
+    @GetMapping("/{id}/health")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BatteryHealthMetrics> getBatteryHealth(@PathVariable Long id) {
+        return ResponseEntity.ok(batteryAnalyticsService.calculateBatteryHealth(id));
+    }
+
+    @GetMapping("/{id}/history")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<BatteryHealthMetrics.UsageEvent>> getBatteryUsageHistory(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, Math.min(size, 100));
+        return ResponseEntity.ok(batteryAnalyticsService.getBatteryUsageHistory(id, pageable));
+    }
+
+    @GetMapping("/{id}/inspections")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<BatteryHealthMetrics.InspectionSummary>> getBatteryInspectionHistory(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, Math.min(size, 100));
+        return ResponseEntity.ok(batteryAnalyticsService.getBatteryInspectionHistory(id, pageable));
+    }
+
+    @GetMapping("/health-report")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Object>> getSystemWideBatteryHealthReport() {
+        return ResponseEntity.ok(batteryAnalyticsService.getSystemWideBatteryHealthReport());
+    }
+
     @PatchMapping("/{id}/status")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Battery> updateStatus(
             @PathVariable Long id,
             @RequestBody UpdateStatusRequest request
