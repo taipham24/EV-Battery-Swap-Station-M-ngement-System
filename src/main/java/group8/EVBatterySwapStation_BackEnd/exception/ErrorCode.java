@@ -35,10 +35,19 @@ public enum ErrorCode {
     SUBSCRIPTION_NOT_FOUND(1013, "Subscription not found", HttpStatusCode.valueOf(404)),
     SUBSCRIPTION_INACTIVE(1014, "Subscription is inactive", HttpStatusCode.valueOf(400)),
     BOOKING_INVALID(6001, "Booking not active/not found", HttpStatusCode.valueOf(400)),
+    SWAP_NOT_FOUND(6006, "Swap transaction not found", HttpStatusCode.valueOf(404)),
     BATTERY_NOT_AVAILABLE(6002, "Reserved battery not available", HttpStatusCode.valueOf(409)),
     ALREADY_PAID(6003, "Payment already recorded", HttpStatusCode.valueOf(409)),
     AMOUNT_MISMATCH(6004, "Amount mismatch", HttpStatusCode.valueOf(400)),
     BATTERY_NOT_FOUND(6005, "Battery not found", HttpStatusCode.valueOf(404)),
+    CANNOT_DELETE_STATION_WITH_BATTERIES(7001, "Cannot delete station with batteries", HttpStatusCode.valueOf(400)),
+    CANNOT_DELETE_STATION_WITH_ACTIVE_SWAPS(7002, "Cannot delete station with active swaps", HttpStatusCode.valueOf(400)),
+    BATTERY_CANNOT_BE_TRANSFERRED(8001, "Battery cannot be transferred", HttpStatusCode.valueOf(400)),
+    TRANSFER_NOT_FOUND(8002, "Transfer not found", HttpStatusCode.valueOf(404)),
+    TRANSFER_ALREADY_COMPLETED(8003, "Transfer already completed", HttpStatusCode.valueOf(409)),
+    COMPLAINT_NOT_FOUND(9001, "Complaint not found", HttpStatusCode.valueOf(404)),
+    COMPLAINT_ALREADY_RESOLVED(9002, "Complaint already resolved", HttpStatusCode.valueOf(409)),
+    INVALID_COMPLAINT_STATUS(9003, "Invalid complaint status", HttpStatusCode.valueOf(400)),
     ;
 
     @Getter

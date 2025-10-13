@@ -21,7 +21,7 @@ public class SubscriptionPlanController {
     private final SubscriptionPlanService subscriptionPlanService;
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SubscriptionPlan> createSubscription(@RequestBody SubscriptionPlanRequest request) {
 
         SubscriptionPlan plan = new SubscriptionPlan();
@@ -44,7 +44,7 @@ public class SubscriptionPlanController {
         return ResponseEntity.ok(plans);
     }
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SubscriptionPlan> update(@PathVariable Long id, @RequestBody SubscriptionPlanRequest request) {
         SubscriptionPlan updatedPlan = new SubscriptionPlan();
         updatedPlan.setName(request.getName());

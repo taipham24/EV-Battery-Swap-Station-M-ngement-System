@@ -153,7 +153,7 @@ public class AuthenticationService {
         return stringJoiner.toString();
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void trackingLogin(Long driverId, Date expiredTime) {
         TrackingUserLogin trackingUserLogin = new TrackingUserLogin();
         trackingUserLogin.setDriverId(driverId);

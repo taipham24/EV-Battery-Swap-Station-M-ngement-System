@@ -5,7 +5,9 @@ public enum BatteryLedgerAction {
     DISPENSE,
     RETURN,
     QUARANTINE,
-    RELEASE
+    RELEASE,
+    TRANSFER_OUT,
+    TRANSFER_IN
 }
 
 
