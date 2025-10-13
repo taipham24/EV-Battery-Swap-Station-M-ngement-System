@@ -8,3 +8,4 @@ public interface BatteryInspectionRepository extends JpaRepository<BatteryInspec
 
 
 
+

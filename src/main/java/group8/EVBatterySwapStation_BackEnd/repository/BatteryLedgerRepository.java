@@ -8,3 +8,4 @@ public interface BatteryLedgerRepository extends JpaRepository<BatteryLedger, Lo
 
 
 
+
