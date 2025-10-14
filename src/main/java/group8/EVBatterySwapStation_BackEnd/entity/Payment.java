@@ -46,4 +46,8 @@ public class Payment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cashier_staff_id")
     private StaffProfile cashier;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subscription_id")
+    private DriverSubscription subscription;
 }
