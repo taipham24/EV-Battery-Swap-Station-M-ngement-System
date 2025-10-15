@@ -1,5 +1,6 @@
 package group8.EVBatterySwapStation_BackEnd.entity;
 
+import group8.EVBatterySwapStation_BackEnd.enums.SubscriptionStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,6 +39,10 @@ public class DriverSubscription {
 
     @Column(name = "auto_renew")
     private boolean autoRenew;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private SubscriptionStatus status;
 
     @OneToOne
     @JoinColumn(name = "battery_id")

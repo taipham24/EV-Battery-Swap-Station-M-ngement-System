@@ -5,6 +5,7 @@ import group8.EVBatterySwapStation_BackEnd.entity.Battery;
 import group8.EVBatterySwapStation_BackEnd.entity.Driver;
 import group8.EVBatterySwapStation_BackEnd.entity.DriverSubscription;
 import group8.EVBatterySwapStation_BackEnd.entity.SubscriptionPlan;
+import group8.EVBatterySwapStation_BackEnd.enums.SubscriptionStatus;
 import group8.EVBatterySwapStation_BackEnd.exception.AppException;
 import group8.EVBatterySwapStation_BackEnd.exception.ErrorCode;
 import group8.EVBatterySwapStation_BackEnd.repository.BatteryRepository;
@@ -43,7 +44,8 @@ public class DriverSubscriptionImpl implements DriverSubscriptionService {
         sub.setStartDate(LocalDateTime.now());
         sub.setEndDate(LocalDateTime.now().plusDays(plan.getDurationDays()));
         sub.setSwapsUsed(0);
-        sub.setActive(true);
+        sub.setActive(false); // Will be activated after payment
+        sub.setStatus(SubscriptionStatus.PENDING_PAYMENT);
         sub.setAutoRenew(request.isAutoRenew());
         return repository.save(sub);
     }
