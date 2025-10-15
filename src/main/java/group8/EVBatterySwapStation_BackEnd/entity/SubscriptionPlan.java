@@ -30,7 +30,7 @@ public class SubscriptionPlan {
 
     @Min(value = 0, message = "Price must be non-negative")
     @Column(name = "price", nullable = false)
-    private Double price; // Giá gói dịch vụ
+    private Long price; // Giá gói dịch vụ
 
     @Column(name = "duration_days")
     private Integer durationDays;

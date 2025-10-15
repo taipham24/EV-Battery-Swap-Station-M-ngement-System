@@ -28,7 +28,10 @@ public class CustomJWTDecoder implements JwtDecoder {
 
     public Jwt decode(String token) {
         // Check token valid
-
+        if (token == null || token.isBlank()) {
+            // ✅ Bỏ qua cho public endpoint
+            return null;
+        }
         VerifyTokenRequest verifyTokenRequest = new VerifyTokenRequest();
         verifyTokenRequest.setToken(token);
         var response = authenticationService.verifyToken(verifyTokenRequest);

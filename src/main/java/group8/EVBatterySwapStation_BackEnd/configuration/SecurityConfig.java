@@ -29,7 +29,7 @@ public class SecurityConfig {
     private CustomJWTDecoder customJWTDecoder;
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/api/user",
+            "/api/driver",
             "/auth/login",
             "/auth/verifyToken",
             "/api/register",
@@ -42,19 +42,19 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(request -> request
+        httpSecurity
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(req -> req
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest()
-                        .authenticated()); // any method with PUBLIC_ENDPOINTS is allowed to access without security check
-
-        //Validate jwt
-        httpSecurity.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(customJWTDecoder)
+                        .anyRequest().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.decoder(customJWTDecoder)
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint()) // 401 error handle
-        );
-        httpSecurity.csrf(AbstractHttpConfigurer::disable); //turn off csrf to avoid forbidden
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                );
+
 
         return httpSecurity.build();
     }

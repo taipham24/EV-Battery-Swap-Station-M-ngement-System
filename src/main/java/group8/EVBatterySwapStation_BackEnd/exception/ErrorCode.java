@@ -54,6 +54,7 @@ public enum ErrorCode {
     ROLE_NOT_FOUND(10018, "Role not found", HttpStatusCode.valueOf(404)),
     STATION_NOT_FOUND(10019, "Station not found", HttpStatusCode.valueOf(404)),
     DRIVER_NOT_FOUND(10020, "Driver not found", HttpStatusCode.valueOf(404)),
+    INVALID_AMOUNT(10021, "Invalid amount", HttpStatusCode.valueOf(400))
     ;
 
     @Getter
