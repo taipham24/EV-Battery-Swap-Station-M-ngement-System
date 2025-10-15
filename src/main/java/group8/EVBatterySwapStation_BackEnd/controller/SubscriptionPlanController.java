@@ -38,7 +38,7 @@ public class SubscriptionPlanController {
         SubscriptionPlan plan = new SubscriptionPlan();
         plan.setName(request.getName());
         plan.setDescription(request.getDescription());
-        plan.setPrice(request.getPrice());
+        plan.setPrice((long) request.getPrice());
         plan.setDurationDays(request.getDurationDays());
         plan.setSwapLimit(request.getSwapLimit());
         plan.setPricePerSwap(request.getPricePerSwap());
@@ -95,7 +95,7 @@ public class SubscriptionPlanController {
         SubscriptionPlan updatedPlan = new SubscriptionPlan();
         updatedPlan.setName(request.getName());
         updatedPlan.setDescription(request.getDescription());
-        updatedPlan.setPrice(request.getPrice());
+        updatedPlan.setPrice((long) request.getPrice());
         updatedPlan.setDurationDays(request.getDurationDays());
         updatedPlan.setSwapLimit(request.getSwapLimit());
         updatedPlan.setPricePerSwap(request.getPricePerSwap());
