@@ -26,7 +26,7 @@ public class Payment {
     private Long paymentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "swap_id", nullable = false)
+    @JoinColumn(name = "swap_id")
     private SwapTransaction swap;
 
     @Enumerated(EnumType.STRING)

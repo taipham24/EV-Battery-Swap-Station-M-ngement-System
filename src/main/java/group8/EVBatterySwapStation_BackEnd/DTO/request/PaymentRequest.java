@@ -17,5 +17,6 @@ public class PaymentRequest {
     private PaymentMethod method;    // VNPAY, CASH, BANK_TRANSFER, ...
     private String ipAddr;           // Địa chỉ IP của khách hàng (nếu thanh toán online)
     private Long amountVnd;        // Số tiền thanh toán
+    private Long cashierStaffId;   // ID nhân viên thu ngân (nếu có)
 
 }

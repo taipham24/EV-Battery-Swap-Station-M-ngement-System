@@ -3,6 +3,10 @@ package group8.EVBatterySwapStation_BackEnd.service.imp;
 import group8.EVBatterySwapStation_BackEnd.DTO.request.PaymentRequest;
 import group8.EVBatterySwapStation_BackEnd.entity.Driver;
 import group8.EVBatterySwapStation_BackEnd.entity.DriverSubscription;
+import group8.EVBatterySwapStation_BackEnd.entity.Payment;
+import group8.EVBatterySwapStation_BackEnd.enums.PaymentMethod;
+import group8.EVBatterySwapStation_BackEnd.enums.PaymentStatus;
+import group8.EVBatterySwapStation_BackEnd.enums.SubscriptionStatus;
 import group8.EVBatterySwapStation_BackEnd.exception.AppException;
 import group8.EVBatterySwapStation_BackEnd.exception.ErrorCode;
 import group8.EVBatterySwapStation_BackEnd.repository.DriverRepository;
@@ -10,6 +14,7 @@ import group8.EVBatterySwapStation_BackEnd.repository.DriverSubscriptionReposito
 import group8.EVBatterySwapStation_BackEnd.repository.PaymentRepository;
 import group8.EVBatterySwapStation_BackEnd.service.PaymentService;
 
+import group8.EVBatterySwapStation_BackEnd.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -49,12 +55,24 @@ public class PaymentImpl implements PaymentService {
     @Autowired
     private final PaymentRepository paymentRepository;
 
-    private DriverSubscription driverSubscription;
+    @Autowired
+    private SecurityUtils securityUtils;
 
     @Override
     public String createPayment(PaymentRequest request) {
         try {
             Long driverId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
+            Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new AppException(ErrorCode.DRIVER_NOT_EXISTED));
+            DriverSubscription subscription = driverSubscriptionRepository.findById(request.getSubscriptionId())
+                    .orElseThrow(() -> new AppException(ErrorCode.SUBSCRIPTION_NOT_FOUND));
+
+            if (subscription.getStatus() == SubscriptionStatus.ACTIVE) {
+                throw new AppException(ErrorCode.ALREADY_PAID);
+            }
+            long planPrice = subscription.getPlan().getPrice();
+            if (!Objects.equals(planPrice, request.getAmountVnd())) {
+                throw new AppException(ErrorCode.INVALID_AMOUNT);
+            }
             Map<String, String> vnp_Params = new HashMap<>();
             vnp_Params.put("vnp_Version", "2.1.0");
             vnp_Params.put("vnp_Command", "pay");
@@ -86,13 +104,13 @@ public class PaymentImpl implements PaymentService {
             while (itr.hasNext()) {
                 String fieldName = itr.next();
                 String fieldValue = vnp_Params.get(fieldName);
-                if ((fieldValue != null) && (fieldValue.length() > 0)) {
+                if ((fieldValue != null) && (!fieldValue.isEmpty())) {
                     hashData.append(fieldName);
                     hashData.append('=');
-                    hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString()));
-                    query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
+                    hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8));
+                    query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII));
                     query.append('=');
-                    query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+                    query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
                     if (itr.hasNext()) {
                         query.append('&');
                         hashData.append('&');
@@ -102,13 +120,78 @@ public class PaymentImpl implements PaymentService {
             String queryUrl = query.toString();
             String vnp_SecureHash = hmacSHA512(vnp_HashSecret, hashData.toString());
             queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-            Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new AppException(ErrorCode.DRIVER_NOT_EXISTED));
             paymentTokens.put(vnp_Params.get("vnp_TxnRef"), driver.getUserName());
             return vnp_Url + "?" + queryUrl;
         } catch (Exception e) {
             log.error("Error occurred during payment creation: " + e.getMessage(), e);
             throw new AppException(ErrorCode.PAYMENT_ERROR);
         }
+    }
+
+    @Override
+    public boolean verifyPayment(Map<String, String> params) {
+        String vnp_SecureHash = params.get("vnp_SecureHash").toUpperCase();
+        params.remove("vnp_SecureHash");
+        params.remove("vnp_SecureHashType");
+
+        List<String> fieldNames = new ArrayList<>(params.keySet());
+        Collections.sort(fieldNames);
+
+        StringBuilder hashData = new StringBuilder();
+        Iterator<String> itr = fieldNames.iterator();
+        while (itr.hasNext()) {
+            String fieldName = itr.next();
+            String fieldValue = params.get(fieldName);
+            if ((fieldValue != null) && (!fieldValue.isEmpty())) {
+                hashData.append(fieldName);
+                hashData.append('=');
+                hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+                if (itr.hasNext()) {
+                    hashData.append('&');
+                }
+            }
+        }
+        try {
+            String hashString = hmacSHA512(vnp_HashSecret, hashData.toString());
+            if (!hashString.equals(vnp_SecureHash)) {
+                log.error("Secure hash mismatch. Expected: {}, Actual: {}", hashString, vnp_SecureHash);
+                return false;
+            }
+        } catch (Exception e) {
+            log.error("Error while verifying payment hash", e);
+            return false;
+        }
+        String responseCode = params.get("vnp_ResponseCode");
+        if ("00".equals(responseCode)) {
+            Driver driver = securityUtils.getCurrentUser();
+            Long subscriptionId = Long.valueOf(params.get("vnp_TxnRef"));
+            DriverSubscription driverSubscription = driverSubscriptionRepository.findById(subscriptionId)
+                    .orElseThrow(() -> new RuntimeException("Subscription not found with ID: " + subscriptionId));
+            long amount = Long.parseLong(params.get("vnp_Amount")) / 100;
+
+            Payment payment = new Payment();
+            payment.setMethod(PaymentMethod.CREDIT_CARD);
+            payment.setAmountVnd(amount);
+            payment.setStatus(PaymentStatus.SUCCESS);
+            payment.setPaidAt(LocalDateTime.now());
+            payment.setSubscription(driverSubscription);
+            payment.setSwap(null); // Not linked to a swap transaction
+
+            if(payment.getMethod() == PaymentMethod.CASH) {
+                payment.setCashier(driver.getStaffProfile());
+            }
+
+            driverSubscription.setStatus(SubscriptionStatus.ACTIVE);
+            driverSubscription.setActive(true);
+            driverSubscription.setStartDate(LocalDateTime.now());
+            driverSubscription.setEndDate(LocalDateTime.now().plusDays(driverSubscription.getPlan().getDurationDays()));
+            driverSubscription.setPayment(payment);
+            paymentRepository.save(payment);
+            return true;
+        } else {
+            log.info("Response code is not 00. Actual response: {}", responseCode);
+        }
+        return false;
     }
 
     private String hmacSHA512(String key, String data) throws Exception {
