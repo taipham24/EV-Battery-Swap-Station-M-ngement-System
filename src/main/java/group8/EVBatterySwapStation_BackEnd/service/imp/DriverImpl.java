@@ -33,13 +33,14 @@ public class DriverImpl implements DriverService {
     private DriverRepository driverRepository;
     private RoleRepository roleRepository;
     private VehicleRepository vehicleRepository;
+    private final DriverMapper driverMapper;
 
     @Override
     public DriverResponse register(DriverDTO driverRequest, String userRoleChoice) {
         if (driverRepository.existsByUserName(driverRequest.getUserName()) || driverRepository.existsByEmail(driverRequest.getEmail())) {
             throw new RuntimeException("User already exists");
         }
-        var driver = DriverMapper.mapToDriver(driverRequest);
+        Driver driver = DriverMapper.mapToDriver(driverRequest);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         driver.setPassword(passwordEncoder.encode(driverRequest.getPassword()));
         HashSet<RoleDetail> roles = new HashSet<>();
@@ -60,7 +61,7 @@ public class DriverImpl implements DriverService {
             roles.add(userRole);
             driver.setRoles(roles);
         }
-        var savedDriver = driverRepository.save(driver);
+        Driver savedDriver = driverRepository.save(driver);
         return DriverMapper.mapToDriverResponse(savedDriver);
     }
 
@@ -81,13 +82,11 @@ public class DriverImpl implements DriverService {
     @Override
     public DriverResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
-        String principal = context.getAuthentication().getName();
-        Driver driver = null;
-        if (principal.matches("\\d+")) {
-            Long driverId = Long.valueOf(principal);
-            driver = driverRepository.findById(driverId)
-                    .orElseThrow(() -> new AppException(ErrorCode.DRIVER_NOT_EXISTED));
-        }
+        Long driverId = Long.valueOf(context.getAuthentication().getName());
+
+
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new AppException(ErrorCode.DRIVER_NOT_EXISTED));
         return DriverMapper.mapToDriverResponse(driver);
     }
 
@@ -100,6 +99,7 @@ public class DriverImpl implements DriverService {
         driver.setFullName(newInfoDriver.getFullName());
         return DriverMapper.mapToDriverResponse(driverRepository.save(driver));
     }
+
     @Override
     public void registerBatterySwapService(Long driverId) {
         Driver driver = driverRepository.findById(driverId)
