@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -177,7 +176,7 @@ public class PaymentImpl implements PaymentService {
             payment.setSubscription(driverSubscription);
             payment.setSwap(null); // Not linked to a swap transaction
 
-            if(payment.getMethod() == PaymentMethod.CASH) {
+            if (payment.getMethod() == PaymentMethod.CASH) {
                 payment.setCashier(driver.getStaffProfile());
             }
 

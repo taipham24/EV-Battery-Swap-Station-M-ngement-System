@@ -70,7 +70,6 @@ public class SubscriptionPlanController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Get all subscription plans (including inactive)")
     public ResponseEntity<ApiResponse<List<SubscriptionPlan>>> getAllPlans() {
         log.info("Admin getting all subscription plans");
