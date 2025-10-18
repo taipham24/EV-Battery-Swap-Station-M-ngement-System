@@ -35,4 +35,10 @@ public class DriverSubscriptionController {
         return ResponseEntity.ok(service.cancelSubscription(driverId));
     }
 
+    @PostMapping("/{subscriptionId}/renew")
+    public ResponseEntity<String> manualRenew(@PathVariable Long subscriptionId) {
+        service.renewSubscription(subscriptionId);
+        return ResponseEntity.ok("Subscription renewed successfully.");
+    }
+
 }

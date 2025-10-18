@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Gia hạn gói đăng ký thành công</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 30px;
+            line-height: 1.6;
+        }
+        .content h2 {
+            color: #007bff;
+        }
+        .details {
+            margin: 20px 0;
+            background: #f2f6ff;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .details li {
+            margin: 8px 0;
+        }
+        .footer {
+            background: #f2f2f2;
+            text-align: center;
+            padding: 15px;
+            font-size: 13px;
+            color: #666;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Gia hạn gói đăng ký thành công</h1>
+    </div>
+    <div class="content">
+        <p>Xin chào <strong>{{driverName}}</strong>,</p>
+        <p>Chúng tôi xin thông báo rằng gói đăng ký <b class="highlight">{{planName}}</b> của bạn đã được tự động gia hạn thành công.</p>
+
+        <div class="details">
+            <ul>
+                <li><b>Ngày bắt đầu mới:</b> {{startDate}}</li>
+                <li><b>Ngày hết hạn mới:</b> {{endDate}}</li>
+                <li><b>Số tiền thanh toán:</b> {{amount}} VND</li>
+            </ul>
+        </div>
+
+        <p>Cảm ơn bạn đã tiếp tục tin tưởng và sử dụng dịch vụ của chúng tôi.
+            Nếu bạn có bất kỳ thắc mắc nào, vui lòng liên hệ với bộ phận hỗ trợ khách hàng.</p>
+
+        <p>Trân trọng,<br><b>Đội ngũ EV Battery Swap Station</b></p>
+    </div>
+    <div class="footer">
+        © 2025 EV Battery Swap Station. Mọi quyền được bảo lưu.
+    </div>
+</div>
+</body>
+</html>

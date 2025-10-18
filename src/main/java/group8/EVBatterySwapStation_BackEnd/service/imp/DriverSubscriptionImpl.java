@@ -1,19 +1,17 @@
 package group8.EVBatterySwapStation_BackEnd.service.imp;
 
 import group8.EVBatterySwapStation_BackEnd.DTO.request.DriverSubscriptionRequest;
-import group8.EVBatterySwapStation_BackEnd.entity.Battery;
-import group8.EVBatterySwapStation_BackEnd.entity.Driver;
-import group8.EVBatterySwapStation_BackEnd.entity.DriverSubscription;
-import group8.EVBatterySwapStation_BackEnd.entity.SubscriptionPlan;
+import group8.EVBatterySwapStation_BackEnd.entity.*;
+import group8.EVBatterySwapStation_BackEnd.enums.PaymentMethod;
+import group8.EVBatterySwapStation_BackEnd.enums.PaymentStatus;
 import group8.EVBatterySwapStation_BackEnd.enums.SubscriptionStatus;
 import group8.EVBatterySwapStation_BackEnd.exception.AppException;
 import group8.EVBatterySwapStation_BackEnd.exception.ErrorCode;
-import group8.EVBatterySwapStation_BackEnd.repository.BatteryRepository;
-import group8.EVBatterySwapStation_BackEnd.repository.DriverRepository;
-import group8.EVBatterySwapStation_BackEnd.repository.DriverSubscriptionRepository;
-import group8.EVBatterySwapStation_BackEnd.repository.SubscriptionPlanRepository;
+import group8.EVBatterySwapStation_BackEnd.repository.*;
 import group8.EVBatterySwapStation_BackEnd.service.DriverSubscriptionService;
+import group8.EVBatterySwapStation_BackEnd.service.EmailService;
 import group8.EVBatterySwapStation_BackEnd.utils.SecurityUtils;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +28,12 @@ public class DriverSubscriptionImpl implements DriverSubscriptionService {
     private SubscriptionPlanRepository subscriptionPlanRepository;
     @Autowired
     private BatteryRepository batteryRepository;
+    @Autowired
+    private DriverSubscriptionRepository driverSubscriptionRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public DriverSubscription createSubscription(DriverSubscriptionRequest request) {
@@ -64,6 +68,7 @@ public class DriverSubscriptionImpl implements DriverSubscriptionService {
                 .orElseThrow(() -> new AppException(ErrorCode.DRIVER_NOT_EXISTED));
         return repository.findByDriver(driver);
     }
+
     @Override
     public DriverSubscription cancelSubscription(Long subscriptionId) {
         DriverSubscription sub = repository.findById(subscriptionId)
@@ -91,6 +96,37 @@ public class DriverSubscriptionImpl implements DriverSubscriptionService {
                 repository.save(sub);
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public void renewSubscription(Long subscriptionId) {
+        DriverSubscription oldSub = repository.findById(subscriptionId)
+                .orElseThrow(() -> new AppException(ErrorCode.SUBSCRIPTION_NOT_FOUND));
+        oldSub.setActive(false);
+        oldSub.setStatus(SubscriptionStatus.EXPIRED);
+        repository.save(oldSub);
+
+        DriverSubscription newSub = new DriverSubscription();
+        newSub.setDriver(oldSub.getDriver());
+        newSub.setPlan(oldSub.getPlan());
+        newSub.setStartDate(LocalDateTime.now());
+        newSub.setEndDate(LocalDateTime.now().plusDays(oldSub.getPlan().getDurationDays()));
+        newSub.setSwapsUsed(0);
+        newSub.setActive(true);
+        newSub.setAutoRenew(true);
+        newSub.setStatus(SubscriptionStatus.ACTIVE);
+        repository.save(newSub);
+
+        Payment payment = new Payment();
+        payment.setSubscription(newSub);
+        payment.setMethod(PaymentMethod.CREDIT_CARD);
+        payment.setAmountVnd(oldSub.getPlan().getPrice());
+        payment.setStatus(PaymentStatus.SUCCESS);
+        payment.setPaidAt(LocalDateTime.now());
+        paymentRepository.save(payment);
+
+        emailService.sendRenewalSuccessEmail(oldSub.getDriver().getEmail(), newSub);
     }
 
 }

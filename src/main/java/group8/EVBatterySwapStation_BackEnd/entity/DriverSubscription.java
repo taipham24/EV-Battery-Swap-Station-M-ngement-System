@@ -1,5 +1,6 @@
 package group8.EVBatterySwapStation_BackEnd.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import group8.EVBatterySwapStation_BackEnd.enums.SubscriptionStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "driver_subscription")
@@ -48,7 +51,7 @@ public class DriverSubscription {
     @JoinColumn(name = "battery_id")
     private Battery battery;
 
-    @OneToOne
-    @JoinColumn(name = "payment_id")
+    @OneToOne(mappedBy = "subscription", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Payment payment;
 }

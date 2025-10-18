@@ -1,5 +1,6 @@
 package group8.EVBatterySwapStation_BackEnd.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import group8.EVBatterySwapStation_BackEnd.enums.PaymentMethod;
 import group8.EVBatterySwapStation_BackEnd.enums.PaymentStatus;
 import jakarta.persistence.*;
@@ -49,5 +50,6 @@ public class Payment {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subscription_id")
+    @JsonBackReference
     private DriverSubscription subscription;
 }
