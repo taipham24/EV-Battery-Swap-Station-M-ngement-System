@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -55,5 +56,15 @@ public class SupportTicketImpl implements SupportTicketService {
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new AppException(ErrorCode.DRIVER_NOT_EXISTED));
         return repository.findByDriver_DriverId(driver.getDriverId());
+    }
+
+    @Override
+    public SupportTicket resolveTicket(Long ticketId) {
+        SupportTicket ticket = repository.findById(ticketId)
+                .orElseThrow(() -> new AppException(ErrorCode.SUPPORT_TICKET_NOT_FOUND));
+        ticket.setStatus(TicketStatus.RESOLVED);
+        ticket.setResolvedAt(LocalDateTime.now());
+        repository.save(ticket);
+        return ticket;
     }
 }

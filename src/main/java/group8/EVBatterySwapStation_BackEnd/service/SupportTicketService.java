@@ -9,4 +9,6 @@ public interface SupportTicketService {
     SupportTicket createTicket(Long driverId, SupportTicketRequest request);
 
     List<SupportTicket> getDriverTickets(Long driverId);
+
+    SupportTicket resolveTicket(Long ticketId);
 }

@@ -16,12 +16,17 @@ public class SupportTicketController {
     private final SupportTicketService service;
 
     @PostMapping("/create")
-    public ResponseEntity<SupportTicket> createTicket(@RequestParam Long driverId, @RequestBody SupportTicketRequest request){
+    public ResponseEntity<SupportTicket> createTicket(@RequestParam Long driverId, @RequestBody SupportTicketRequest request) {
         return ResponseEntity.ok(service.createTicket(driverId, request));
     }
 
     @GetMapping("/driver/{driverId}")
-    public ResponseEntity<List<SupportTicket>> getDriverTickets(@PathVariable Long driverId){
+    public ResponseEntity<List<SupportTicket>> getDriverTickets(@PathVariable Long driverId) {
         return ResponseEntity.ok(service.getDriverTickets(driverId));
+    }
+
+    @PutMapping("/{ticketId}/resolve")
+    public ResponseEntity<SupportTicket> resolveTicket(@PathVariable Long ticketId) {
+        return ResponseEntity.ok(service.resolveTicket(ticketId));
     }
 }
