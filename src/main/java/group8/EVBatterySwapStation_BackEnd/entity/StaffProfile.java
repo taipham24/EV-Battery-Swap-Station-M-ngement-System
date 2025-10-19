@@ -27,6 +27,9 @@ public class StaffProfile {
     @JoinColumn(name = "station_id")
     private Station station;
 
+    @OneToMany(mappedBy = "assignedStaff", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SupportTicket> assignedTickets;
+
     private String workShift;
 
     // Admin management fields

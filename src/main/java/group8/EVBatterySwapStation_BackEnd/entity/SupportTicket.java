@@ -1,5 +1,6 @@
 package group8.EVBatterySwapStation_BackEnd.entity;
 
+import group8.EVBatterySwapStation_BackEnd.enums.Priority;
 import group8.EVBatterySwapStation_BackEnd.enums.TicketStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,11 +28,19 @@ public class SupportTicket {
     @JoinColumn(name = "station_id")
     private Station station;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_staff_id")
+    private StaffProfile assignedStaff;
+
     @Column(name = "issue_type", length = 50)
     private String issueType;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "priority", nullable = false)
+    private Priority priority;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

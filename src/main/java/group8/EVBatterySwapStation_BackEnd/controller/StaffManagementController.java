@@ -1,9 +1,11 @@
 package group8.EVBatterySwapStation_BackEnd.controller;
 
+import group8.EVBatterySwapStation_BackEnd.DTO.request.AssignTicketRequest;
 import group8.EVBatterySwapStation_BackEnd.DTO.request.StaffAssignmentRequest;
 import group8.EVBatterySwapStation_BackEnd.DTO.request.StaffFilterRequest;
 import group8.EVBatterySwapStation_BackEnd.entity.ApiResponse;
 import group8.EVBatterySwapStation_BackEnd.DTO.response.StaffDetailResponse;
+import group8.EVBatterySwapStation_BackEnd.entity.SupportTicket;
 import group8.EVBatterySwapStation_BackEnd.service.StaffManagementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -130,6 +132,36 @@ public class StaffManagementController {
                 .code(200)
                 .message("Staff statistics retrieved successfully")
                 .result(statistics)
+                .build());
+    }
+
+    @GetMapping("/tickets")
+    @PreAuthorize("hasAuthority('STAFF')")
+    @Operation(summary = "Get tickets handled by staff")
+    public ResponseEntity<ApiResponse<List<SupportTicket>>> getAllTickets() {
+        log.info("Staff getting all tickets handled by staff");
+
+        List<SupportTicket> tickets = staffManagementService.getAllTickets();
+
+        return ResponseEntity.ok(ApiResponse.<List<SupportTicket>>builder()
+                .code(200)
+                .message("Tickets retrieved successfully")
+                .result(tickets)
+                .build());
+    }
+
+    @PutMapping("/{ticketId}/assign")
+    @PreAuthorize("hasAuthority('STAFF')")
+    @Operation(summary = "Assign ticket to staff")
+    public ResponseEntity<ApiResponse<SupportTicket>> assignTicketToStaff(
+            @Parameter(description = "Ticket ID") @PathVariable Long ticketId,
+            @Parameter(description = "Staff ID") @RequestParam AssignTicketRequest request) {
+        log.info("Staff assigning ticket {} to staff {}", ticketId, request);
+        SupportTicket ticket = staffManagementService.assignTicket(ticketId, request);
+        return ResponseEntity.ok(ApiResponse.<SupportTicket>builder()
+                .code(200)
+                .message("Ticket assigned successfully")
+                .result(ticket)
                 .build());
     }
 }
