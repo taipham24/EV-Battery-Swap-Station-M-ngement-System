@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -28,7 +30,7 @@ public class SupportTicketImpl implements SupportTicketService {
     private final StationRepository stationRepository;
 
     @Override
-    public SupportTicket createTicket(Long driverId, SupportTicketRequest request){
+    public SupportTicket createTicket(Long driverId, SupportTicketRequest request) {
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new AppException(ErrorCode.DRIVER_NOT_EXISTED));
         Station station = stationRepository.findById(request.getStationId())
@@ -46,5 +48,12 @@ public class SupportTicketImpl implements SupportTicketService {
         repository.save(ticket);
 
         return ticket;
+    }
+
+    @Override
+    public List<SupportTicket> getDriverTickets(Long driverId) {
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new AppException(ErrorCode.DRIVER_NOT_EXISTED));
+        return repository.findByDriver_DriverId(driver.getDriverId());
     }
 }

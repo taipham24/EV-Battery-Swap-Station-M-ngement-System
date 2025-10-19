@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/support")
 @RequiredArgsConstructor
@@ -16,5 +18,10 @@ public class SupportTicketController {
     @PostMapping("/create")
     public ResponseEntity<SupportTicket> createTicket(@RequestParam Long driverId, @RequestBody SupportTicketRequest request){
         return ResponseEntity.ok(service.createTicket(driverId, request));
+    }
+
+    @GetMapping("/driver/{driverId}")
+    public ResponseEntity<List<SupportTicket>> getDriverTickets(@PathVariable Long driverId){
+        return ResponseEntity.ok(service.getDriverTickets(driverId));
     }
 }
