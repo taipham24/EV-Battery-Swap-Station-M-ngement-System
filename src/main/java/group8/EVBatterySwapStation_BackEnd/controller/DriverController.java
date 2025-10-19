@@ -28,6 +28,14 @@ public class DriverController {
         return apiResponse;
     }
 
+    @PostMapping("/admin/registerDriver")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ApiResponse<DriverResponse> registerAsStaff(@RequestBody DriverDTO driverDTO, @RequestParam String userRoleChoice) {
+        ApiResponse<DriverResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(driverService.register(driverDTO, userRoleChoice));
+        return apiResponse;
+    }
+
     @GetMapping("/getDrivers")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ApiResponse<List<DriverResponse>> getAllDriver() {
