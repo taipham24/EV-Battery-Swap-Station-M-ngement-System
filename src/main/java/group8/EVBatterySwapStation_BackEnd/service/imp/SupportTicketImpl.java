@@ -50,6 +50,7 @@ public class SupportTicketImpl implements SupportTicketService {
         ticket.setDescription(request.getDescription());
         ticket.setStatus(TicketStatus.OPEN);
         ticket.setPriority(request.getPriority());
+        ticket.setCategory(request.getCategory());
         ticket.setCreatedAt(LocalDateTime.now());
         repository.save(ticket);
 
