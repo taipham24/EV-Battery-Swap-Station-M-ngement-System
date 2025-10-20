@@ -45,4 +45,10 @@ public class SupportTicketController {
         return ResponseEntity.ok(service.getTicketStatsByStation());
     }
 
+    @GetMapping("/admin/stats/station")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('STAFF')")
+    public ResponseEntity<Map<String, Long>> getTicketStatsByStation() {
+        return ResponseEntity.ok(service.getTicketStatsByStatus());
+    }
+
 }

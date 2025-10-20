@@ -18,4 +18,6 @@ public interface SupportTicketService {
     Map<String, Long> getTicketStatsByCategory();
 
     Map<String, Long> getTicketStatsByStation();
+
+    Map<String, Long> getTicketStatsByStatus();
 }

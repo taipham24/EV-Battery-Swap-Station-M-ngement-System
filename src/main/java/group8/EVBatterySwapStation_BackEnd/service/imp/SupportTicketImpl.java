@@ -113,4 +113,14 @@ public class SupportTicketImpl implements SupportTicketService {
         }
         return stats;
     }
+    @Override
+    public Map<String, Long> getTicketStatsByStatus(){
+        Map<String, Long> stats = new HashMap<>();
+        for (Object[] row : repository.countTicketsByStatus()) {
+            String status = (String) row[0];
+            Long count = (Long) row[1];
+            stats.put(status, count);
+        }
+        return stats;
+    }
 }
