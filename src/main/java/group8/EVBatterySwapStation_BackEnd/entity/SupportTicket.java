@@ -2,6 +2,7 @@ package group8.EVBatterySwapStation_BackEnd.entity;
 
 import group8.EVBatterySwapStation_BackEnd.enums.IssueType;
 import group8.EVBatterySwapStation_BackEnd.enums.Priority;
+import group8.EVBatterySwapStation_BackEnd.enums.SupportCategory;
 import group8.EVBatterySwapStation_BackEnd.enums.TicketStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -48,6 +49,9 @@ public class SupportTicket {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private TicketStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private SupportCategory category;
 
     @CreatedDate
     @Column(updatable = false)

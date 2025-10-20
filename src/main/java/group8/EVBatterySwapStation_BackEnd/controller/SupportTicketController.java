@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/support")
@@ -29,5 +30,10 @@ public class SupportTicketController {
     @PutMapping("/{ticketId}/resolve")
     public ResponseEntity<SupportTicket> resolveTicket(@PathVariable Long ticketId) {
         return ResponseEntity.ok(service.resolveTicket(ticketId));
+    }
+
+    @GetMapping("/stats/category")
+    public ResponseEntity<Map<String, Long>> getTicketStatsByCategory() {
+        return ResponseEntity.ok(service.getTicketStatsByCategory());
     }
 }
