@@ -1,6 +1,7 @@
 package group8.EVBatterySwapStation_BackEnd.service.imp;
 
 import group8.EVBatterySwapStation_BackEnd.DTO.request.SupportTicketRequest;
+import group8.EVBatterySwapStation_BackEnd.DTO.response.SupportTicketResponse;
 import group8.EVBatterySwapStation_BackEnd.entity.Driver;
 import group8.EVBatterySwapStation_BackEnd.entity.Station;
 import group8.EVBatterySwapStation_BackEnd.entity.SupportTicket;
@@ -31,7 +32,7 @@ public class SupportTicketImpl implements SupportTicketService {
     private final StationRepository stationRepository;
 
     @Override
-    public SupportTicket createTicket(Long driverId, SupportTicketRequest request) {
+    public SupportTicketResponse createTicket(Long driverId, SupportTicketRequest request) {
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new AppException(ErrorCode.DRIVER_NOT_EXISTED));
         Station station = stationRepository.findById(request.getStationId())
@@ -46,16 +47,37 @@ public class SupportTicketImpl implements SupportTicketService {
         ticket.setIssueType(request.getIssueType());
         ticket.setDescription(request.getDescription());
         ticket.setStatus(TicketStatus.OPEN);
+        ticket.setPriority(request.getPriority());
+        ticket.setCreatedAt(LocalDateTime.now());
         repository.save(ticket);
 
-        return ticket;
+        return SupportTicketResponse.builder()
+                .ticketId(ticket.getTicketId())
+                .driverId(driver.getDriverId())
+                .stationId(station != null ? station.getStationId() : null)
+                .issueType(ticket.getIssueType())
+                .priority(ticket.getPriority())
+                .description(ticket.getDescription())
+                .status(ticket.getStatus())
+                .createdAt(ticket.getCreatedAt())
+                .build();
     }
 
     @Override
-    public List<SupportTicket> getDriverTickets(Long driverId) {
+    public List<SupportTicketResponse> getDriverTickets(Long driverId) {
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new AppException(ErrorCode.DRIVER_NOT_EXISTED));
-        return repository.findByDriver_DriverId(driver.getDriverId());
+        List<SupportTicket> tickets = repository.findByDriver_DriverId(driverId);
+        return tickets.stream().map(ticket -> SupportTicketResponse.builder()
+                .ticketId(ticket.getTicketId())
+                .driverId(driver.getDriverId())
+                .stationId(ticket.getStation() != null ? ticket.getStation().getStationId() : null)
+                .issueType(ticket.getIssueType())
+                .description(ticket.getDescription())
+                .status(ticket.getStatus())
+                .createdAt(ticket.getCreatedAt())
+                .resolvedAt(ticket.getResolvedAt())
+                .build()).toList();
     }
 
     @Override
