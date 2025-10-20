@@ -6,6 +6,7 @@ import group8.EVBatterySwapStation_BackEnd.entity.SupportTicket;
 import group8.EVBatterySwapStation_BackEnd.service.SupportTicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,8 +33,16 @@ public class SupportTicketController {
         return ResponseEntity.ok(service.resolveTicket(ticketId));
     }
 
-    @GetMapping("/stats/category")
+    @GetMapping("/admin/stats/category")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('STAFF')")
     public ResponseEntity<Map<String, Long>> getTicketStatsByCategory() {
         return ResponseEntity.ok(service.getTicketStatsByCategory());
     }
+
+    @GetMapping("/admin/stats/status")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('STAFF')")
+    public ResponseEntity<Map<String, Long>> getTicketStatsByStatus() {
+        return ResponseEntity.ok(service.getTicketStatsByStation());
+    }
+
 }

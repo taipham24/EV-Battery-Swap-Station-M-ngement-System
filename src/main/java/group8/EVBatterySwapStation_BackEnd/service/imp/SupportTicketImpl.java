@@ -102,4 +102,15 @@ public class SupportTicketImpl implements SupportTicketService {
         }
         return stats;
     }
+
+    @Override
+    public Map<String, Long> getTicketStatsByStation(){
+        Map<String, Long> stats = new HashMap<>();
+        for (Object[] row : repository.countTicketsByStation()) {
+            String stationName = (String) row[0];
+            Long count = (Long) row[1];
+            stats.put(stationName, count);
+        }
+        return stats;
+    }
 }

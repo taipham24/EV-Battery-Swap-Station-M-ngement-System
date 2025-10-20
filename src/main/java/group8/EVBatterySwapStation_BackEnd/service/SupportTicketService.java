@@ -16,4 +16,6 @@ public interface SupportTicketService {
     SupportTicket resolveTicket(Long ticketId);
 
     Map<String, Long> getTicketStatsByCategory();
+
+    Map<String, Long> getTicketStatsByStation();
 }
