@@ -2,6 +2,7 @@ package group8.EVBatterySwapStation_BackEnd.service.imp;
 
 import group8.EVBatterySwapStation_BackEnd.entity.Booking;
 import group8.EVBatterySwapStation_BackEnd.entity.DriverSubscription;
+import group8.EVBatterySwapStation_BackEnd.entity.SupportTicket;
 import group8.EVBatterySwapStation_BackEnd.service.EmailService;
 import group8.EVBatterySwapStation_BackEnd.service.EmailTemplateService;
 import jakarta.mail.MessagingException;
@@ -89,5 +90,17 @@ public class EmailImpl implements EmailService {
         } catch (MessagingException e) {
             throw new RuntimeException("Failed to send booking rejection email", e);
         }
+    }
+
+    @Override
+    public void sendEscalationNotice(SupportTicket ticket) {
+        String subject = "⚠️ Ticket #" + ticket.getTicketId() + " bị quá hạn SLA!";
+        String content = """
+            Ticket %d (Category: %s) đã quá hạn xử lý.
+            Ưu tiên: %s
+            Trạng thái hiện tại: %s
+            """.formatted(ticket.getTicketId(), ticket.getCategory(), ticket.getPriority(), ticket.getStatus());
+        // Gửi mail tới admin
+        // mailSender.send(...)
     }
 }

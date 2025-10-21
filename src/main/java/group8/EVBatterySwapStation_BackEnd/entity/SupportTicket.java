@@ -53,6 +53,8 @@ public class SupportTicket {
     @Enumerated(EnumType.STRING)
     private SupportCategory category;
 
+    private String responseMessage;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -61,5 +63,22 @@ public class SupportTicket {
     private LocalDateTime updatedAt;
 
     private LocalDateTime resolvedAt;
+
+    private LocalDateTime slaDeadline;
+
+    private boolean autoEscalated;
+
+    @PrePersist
+    public void prePersist() {
+        if (status == null) status = TicketStatus.OPEN;
+        if (priority == null) priority = Priority.NORMAL;
+        if (createdAt == null) createdAt = LocalDateTime.now();
+        if (slaDeadline == null) slaDeadline = createdAt.plusHours(priority.getSlaHours());
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
 }
