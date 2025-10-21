@@ -6,6 +6,8 @@ import group8.EVBatterySwapStation_BackEnd.DTO.request.StaffFilterRequest;
 import group8.EVBatterySwapStation_BackEnd.entity.ApiResponse;
 import group8.EVBatterySwapStation_BackEnd.DTO.response.StaffDetailResponse;
 import group8.EVBatterySwapStation_BackEnd.entity.SupportTicket;
+import group8.EVBatterySwapStation_BackEnd.enums.SupportCategory;
+import group8.EVBatterySwapStation_BackEnd.enums.TicketStatus;
 import group8.EVBatterySwapStation_BackEnd.service.StaffManagementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -135,22 +137,17 @@ public class StaffManagementController {
                 .build());
     }
 
-    @GetMapping("/tickets")
+    @GetMapping("/staff/view")
     @PreAuthorize("hasAuthority('STAFF')")
     @Operation(summary = "Get tickets handled by staff")
-    public ResponseEntity<ApiResponse<List<SupportTicket>>> getAllTickets() {
-        log.info("Staff getting all tickets handled by staff");
-
-        List<SupportTicket> tickets = staffManagementService.getAllTickets();
-
-        return ResponseEntity.ok(ApiResponse.<List<SupportTicket>>builder()
-                .code(200)
-                .message("Tickets retrieved successfully")
-                .result(tickets)
-                .build());
+    public ResponseEntity<List<SupportTicket>> viewTickets(
+            @RequestParam(required = false) SupportCategory category,
+            @RequestParam(required = false) TicketStatus status,
+            @RequestParam(required = false) Long stationId) {
+        return ResponseEntity.ok(staffManagementService.filterTickets(category, status, stationId));
     }
 
-    @PutMapping("/{ticketId}/assign")
+    @PutMapping("/{ticketId}/assign/{staffId}")
     @PreAuthorize("hasAuthority('STAFF')")
     @Operation(summary = "Assign ticket to staff")
     public ResponseEntity<ApiResponse<SupportTicket>> assignTicketToStaff(
@@ -164,4 +161,22 @@ public class StaffManagementController {
                 .result(ticket)
                 .build());
     }
+
+    @PutMapping("/{ticketId}/update")
+    @PreAuthorize("hasAuthority('STAFF')")
+    @Operation(summary = "Update ticket status and response")
+    public ResponseEntity<SupportTicket> updateTicket(
+            @PathVariable Long ticketId,
+            @RequestParam TicketStatus status,
+            @RequestParam(required = false) String response) {
+        return ResponseEntity.ok(staffManagementService.updateStatusAndResponse(ticketId, status, response));
+    }
+
+    @GetMapping("/admin/dashboard")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Get admin dashboard statistics")
+    public ResponseEntity<Map<String, Object>> dashboard() {
+        return ResponseEntity.ok(staffManagementService.getDashboardStats());
+    }
+
 }

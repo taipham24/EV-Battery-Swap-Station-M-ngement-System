@@ -6,9 +6,12 @@ import group8.EVBatterySwapStation_BackEnd.DTO.request.StaffFilterRequest;
 import group8.EVBatterySwapStation_BackEnd.DTO.response.StaffDetailResponse;
 import group8.EVBatterySwapStation_BackEnd.entity.*;
 import group8.EVBatterySwapStation_BackEnd.enums.Role;
+import group8.EVBatterySwapStation_BackEnd.enums.SupportCategory;
+import group8.EVBatterySwapStation_BackEnd.enums.TicketStatus;
 import group8.EVBatterySwapStation_BackEnd.exception.AppException;
 import group8.EVBatterySwapStation_BackEnd.exception.ErrorCode;
 import group8.EVBatterySwapStation_BackEnd.repository.*;
+import group8.EVBatterySwapStation_BackEnd.service.EmailService;
 import group8.EVBatterySwapStation_BackEnd.service.StaffManagementService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +39,7 @@ public class StaffManagementServiceImpl implements StaffManagementService {
     private final StationRepository stationRepository;
     private final RoleRepository roleRepository;
     private final SupportTicketRepository supportTicketRepository;
+    private final EmailService emailService;
 
     @Override
     @Transactional
@@ -201,15 +205,60 @@ public class StaffManagementServiceImpl implements StaffManagementService {
     }
 
     @Override
-    public SupportTicket assignTicket(Long ticketId, AssignTicketRequest request){
+    public SupportTicket assignTicket(Long ticketId, AssignTicketRequest request) {
         SupportTicket ticket = supportTicketRepository.findById(ticketId)
                 .orElseThrow(() -> new AppException(ErrorCode.SUPPORT_TICKET_NOT_FOUND));
         StaffProfile staff = staffProfileRepository.findById(request.getStaffId())
                 .orElseThrow(() -> new AppException(ErrorCode.STAFF_NOT_FOUND));
         ticket.setAssignedStaff(staff);
-        ticket.setStatus(ticket.getStatus()); // You can set status if needed
+        ticket.setStatus(TicketStatus.IN_PROGRESS); // You can set status if needed
         return supportTicketRepository.save(ticket);
     }
+
+    @Override
+    public List<SupportTicket> filterTickets(SupportCategory category, TicketStatus status, Long stationId) {
+        log.info("Filtering tickets with category: {}, status: {}, stationId: {}", category, status, stationId);
+        return supportTicketRepository.findAll().stream()
+                .filter(t -> category == null || t.getCategory() == category)
+                .filter(t -> status == null || t.getStatus() == status)
+                .filter(t -> stationId == null || t.getStation().getStationId().equals(stationId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public SupportTicket updateStatusAndResponse(Long ticketId, TicketStatus status, String response) {
+        SupportTicket ticket = supportTicketRepository.findById(ticketId)
+                .orElseThrow(() -> new RuntimeException("Ticket not found"));
+        ticket.setStatus(status);
+        ticket.setResponseMessage(response);
+        if (status == TicketStatus.RESOLVED) ticket.setResolvedAt(LocalDateTime.now());
+        return supportTicketRepository.save(ticket);
+    }
+
+    @Override
+    public void checkSlaAndEscalate() {
+        List<SupportTicket> tickets = supportTicketRepository.findAll();
+        for (SupportTicket t : tickets) {
+            if (!t.isAutoEscalated() && t.getSlaDeadline().isBefore(LocalDateTime.now())
+                    && t.getStatus() != TicketStatus.RESOLVED) {
+                t.setStatus(TicketStatus.ESCALATED);
+                t.setAutoEscalated(true);
+                supportTicketRepository.save(t);
+                emailService.sendEscalationNotice(t); // thông báo admin
+            }
+        }
+    }
+
+    @Override
+    public Map<String, Object> getDashboardStats() {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("byCategory", supportTicketRepository.countTicketsByCategory());
+        stats.put("byStatus", supportTicketRepository.countTicketsByStatus());
+        stats.put("byStaff", supportTicketRepository.countTicketsByStaff());
+        stats.put("avgResolutionHours", supportTicketRepository.getAverageResolutionTime());
+        return stats;
+    }
+
 
     private StaffDetailResponse mapToStaffDetailResponse(StaffProfile staffProfile) {
         Driver driver = staffProfile.getDriver();

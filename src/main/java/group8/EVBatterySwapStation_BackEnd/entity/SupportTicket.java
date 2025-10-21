@@ -1,11 +1,15 @@
 package group8.EVBatterySwapStation_BackEnd.entity;
 
+import group8.EVBatterySwapStation_BackEnd.enums.IssueType;
 import group8.EVBatterySwapStation_BackEnd.enums.Priority;
+import group8.EVBatterySwapStation_BackEnd.enums.SupportCategory;
 import group8.EVBatterySwapStation_BackEnd.enums.TicketStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
@@ -33,22 +37,48 @@ public class SupportTicket {
     private StaffProfile assignedStaff;
 
     @Column(name = "issue_type", length = 50)
-    private String issueType;
+    private IssueType issueType;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "priority", nullable = false)
+    @Column(name = "priority")
     private Priority priority;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private TicketStatus status;
 
-    @Column(name = "created_at", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private SupportCategory category;
+
+    private String responseMessage;
+
+    @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "resolved_at")
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
     private LocalDateTime resolvedAt;
+
+    private LocalDateTime slaDeadline;
+
+    private boolean autoEscalated;
+
+    @PrePersist
+    public void prePersist() {
+        if (status == null) status = TicketStatus.OPEN;
+        if (priority == null) priority = Priority.NORMAL;
+        if (createdAt == null) createdAt = LocalDateTime.now();
+        if (slaDeadline == null) slaDeadline = createdAt.plusHours(priority.getSlaHours());
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
 }
