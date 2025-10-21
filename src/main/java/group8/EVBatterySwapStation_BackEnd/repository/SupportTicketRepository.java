@@ -5,6 +5,7 @@ import group8.EVBatterySwapStation_BackEnd.enums.SupportCategory;
 import group8.EVBatterySwapStation_BackEnd.enums.TicketStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,9 +18,10 @@ public interface SupportTicketRepository extends JpaRepository<SupportTicket, Lo
 
     List<SupportTicket> findByCategory(SupportCategory category);
 
-    List<SupportTicket> findByStationId(Long stationId);
+    List<SupportTicket> findByStation_StationId(Long stationId);
 
-    List<SupportTicket> findByAssignedStaffId(Long staffId);
+    @Query("SELECT t FROM SupportTicket t WHERE t.assignedStaff.staffId = :staffId")
+    List<SupportTicket> findByAssignedStaffId(@Param("staffId") Long staffId);
 
     @Query("SELECT t.category, COUNT(t) FROM SupportTicket t GROUP BY t.category")
     List<Object[]> countTicketsByCategory();
