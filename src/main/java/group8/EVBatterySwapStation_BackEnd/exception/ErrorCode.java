@@ -55,7 +55,8 @@ public enum ErrorCode {
     STATION_NOT_FOUND(10019, "Station not found", HttpStatusCode.valueOf(404)),
     DRIVER_NOT_FOUND(10020, "Driver not found", HttpStatusCode.valueOf(404)),
     INVALID_AMOUNT(10021, "Invalid amount", HttpStatusCode.valueOf(400)),
-    SUPPORT_TICKET_NOT_FOUND(10022, "Support ticket not found", HttpStatusCode.valueOf(404))
+    SUPPORT_TICKET_NOT_FOUND(10022, "Support ticket not found", HttpStatusCode.valueOf(404)),
+    FAIL_UPLOADFILE(11000, "Fail to upload file", HttpStatusCode.valueOf(500))
     ;
 
     @Getter

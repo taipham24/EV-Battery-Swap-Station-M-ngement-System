@@ -9,6 +9,7 @@ import group8.EVBatterySwapStation_BackEnd.enums.SwapStatus;
 import group8.EVBatterySwapStation_BackEnd.exception.AppException;
 import group8.EVBatterySwapStation_BackEnd.exception.ErrorCode;
 import group8.EVBatterySwapStation_BackEnd.repository.*;
+import group8.EVBatterySwapStation_BackEnd.service.FirebaseStorageService;
 import group8.EVBatterySwapStation_BackEnd.service.StationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,9 +35,15 @@ public class StationImpl implements StationService {
     private StaffProfileRepository staffProfileRepository;
     @Autowired
     private SwapTransactionRepository swapTransactionRepository;
+    @Autowired
+    private FirebaseStorageService firebaseStorageService;
 
     @Override
-    public Station createStation(StationRequest request) {
+    public Station createStation(StationRequest request, MultipartFile image) throws IOException {
+        String imageUrl = null;
+        if (image != null && !image.isEmpty()) {
+            imageUrl = firebaseStorageService.uploadFile(image);
+        }
         Station station = Station.builder()
                 .name(request.getName())
                 .address(request.getAddress())
@@ -42,25 +51,27 @@ public class StationImpl implements StationService {
                 .longitude(request.getLongitude())
                 .capacity(request.getCapacity())
                 .status(request.getStatus())
-                .imageUrl(request.getImageUrl())
                 .build();
         return stationRepository.save(station);
     }
 
     @Override
     @Transactional
-    public Station updateStation(Long id, StationRequest request) {
+    public Station updateStation(Long id, StationRequest request,MultipartFile image) throws IOException {
+        String imageUrl = null;
+        if (image != null && !image.isEmpty()) {
+            imageUrl = firebaseStorageService.uploadFile(image);
+        }
         Station station = stationRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.STATION_NOT_EXISTED));
-        
+
         station.setName(request.getName());
         station.setAddress(request.getAddress());
         station.setLatitude(request.getLatitude());
         station.setLongitude(request.getLongitude());
         station.setCapacity(request.getCapacity());
         station.setStatus(request.getStatus());
-        station.setImageUrl(request.getImageUrl());
-        
+
         return stationRepository.save(station);
     }
 

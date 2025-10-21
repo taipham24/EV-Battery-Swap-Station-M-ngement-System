@@ -24,6 +24,7 @@ public class FirebaseConfig {
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setStorageBucket("ev-battery-swap-station.firebasestorage.app")
                 .build();
 
         return FirebaseApp.initializeApp(options);
