@@ -5,6 +5,7 @@ import group8.EVBatterySwapStation_BackEnd.DTO.request.DriverDTO;
 import group8.EVBatterySwapStation_BackEnd.DTO.response.DriverResponse;
 import group8.EVBatterySwapStation_BackEnd.entity.ApiResponse;
 import group8.EVBatterySwapStation_BackEnd.service.DriverService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,9 +29,9 @@ public class DriverController {
         return apiResponse;
     }
 
-    @PostMapping("/admin/registerDriver")
+    @PostMapping("/admin/register")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ApiResponse<DriverResponse> registerAsStaff(@RequestBody DriverDTO driverDTO, @RequestParam String userRoleChoice) {
+    public ApiResponse<DriverResponse> registerAsStaff(@RequestBody @Valid DriverDTO driverDTO, @RequestParam String userRoleChoice) {
         ApiResponse<DriverResponse> apiResponse = new ApiResponse<>();
         apiResponse.setResult(driverService.register(driverDTO, userRoleChoice));
         return apiResponse;
