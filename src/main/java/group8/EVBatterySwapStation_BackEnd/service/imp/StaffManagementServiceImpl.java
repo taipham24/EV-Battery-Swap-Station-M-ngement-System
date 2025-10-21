@@ -249,6 +249,16 @@ public class StaffManagementServiceImpl implements StaffManagementService {
         }
     }
 
+    @Override
+    public Map<String, Object> getDashboardStats() {
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("byCategory", supportTicketRepository.countTicketsByCategory());
+        stats.put("byStatus", supportTicketRepository.countTicketsByStatus());
+        stats.put("byStaff", supportTicketRepository.countTicketsByStaff());
+        stats.put("avgResolutionHours", supportTicketRepository.getAverageResolutionTime());
+        return stats;
+    }
+
 
     private StaffDetailResponse mapToStaffDetailResponse(StaffProfile staffProfile) {
         Driver driver = staffProfile.getDriver();

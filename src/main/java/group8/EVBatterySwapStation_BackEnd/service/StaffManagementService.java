@@ -58,4 +58,6 @@ public interface StaffManagementService {
     SupportTicket updateStatusAndResponse(Long ticketId, TicketStatus status, String response);
 
     void checkSlaAndEscalate();
+
+    Map<String, Object> getDashboardStats();
 }

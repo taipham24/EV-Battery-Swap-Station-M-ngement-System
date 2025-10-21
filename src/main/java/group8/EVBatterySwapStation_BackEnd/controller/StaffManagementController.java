@@ -171,5 +171,12 @@ public class StaffManagementController {
             @RequestParam(required = false) String response) {
         return ResponseEntity.ok(staffManagementService.updateStatusAndResponse(ticketId, status, response));
     }
-    
+
+    @GetMapping("/admin/dashboard")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Get admin dashboard statistics")
+    public ResponseEntity<Map<String, Object>> dashboard() {
+        return ResponseEntity.ok(staffManagementService.getDashboardStats());
+    }
+
 }
