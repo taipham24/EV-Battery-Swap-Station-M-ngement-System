@@ -2,10 +2,12 @@ package group8.EVBatterySwapStation_BackEnd.DTO.response;
 
 import group8.EVBatterySwapStation_BackEnd.enums.StationStatus;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class StationInfoResponse {
     private Long stationId;
     private String name;

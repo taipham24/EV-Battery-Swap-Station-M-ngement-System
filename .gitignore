@@ -34,4 +34,5 @@ build/
 
 *.json(unignore)
 credentials.json
+src/main/resources/firebase/
 serviceAccount*.json
