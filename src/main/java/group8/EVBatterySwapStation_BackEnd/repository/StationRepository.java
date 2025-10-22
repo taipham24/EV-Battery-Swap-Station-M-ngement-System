@@ -13,4 +13,6 @@ public interface StationRepository extends JpaRepository<Station, Long> {
     List<Station> findByAddressContainingIgnoreCase(String address);
 
     List<Station> findByNameContainingIgnoreCaseOrAddressContainingIgnoreCase(String name, String address);
+
+    boolean existsByName(String name);
 }

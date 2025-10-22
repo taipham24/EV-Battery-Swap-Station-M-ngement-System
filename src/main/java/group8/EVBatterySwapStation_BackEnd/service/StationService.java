@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface StationService {
 
-    Station createStation(StationRequest request, MultipartFile image) throws IOException;
+    StationInfoResponse createStation(StationRequest request, MultipartFile file) throws IOException;
 
     @Transactional
     Station updateStation(Long id, StationRequest request, MultipartFile image) throws IOException;

@@ -19,7 +19,7 @@ public class FirebaseConfig {
     private String serviceAccountKeyPath;
 
     @PostConstruct
-    public FirebaseApp init() throws IOException {
+    public void init() throws IOException {
         InputStream serviceAccount = new ClassPathResource(serviceAccountKeyPath).getInputStream();
 
         FirebaseOptions options = new FirebaseOptions.Builder()
@@ -27,7 +27,12 @@ public class FirebaseConfig {
                 .setStorageBucket("ev-battery-swap-station.firebasestorage.app")
                 .build();
 
-        return FirebaseApp.initializeApp(options);
+        if (FirebaseApp.getApps().isEmpty()) {
+            FirebaseApp.initializeApp(options);
+            System.out.println("✅ Firebase initialized!");
+        } else {
+            System.out.println("⚠️ Firebase already initialized, using the existing instance!");
+        }
 
     }
 }

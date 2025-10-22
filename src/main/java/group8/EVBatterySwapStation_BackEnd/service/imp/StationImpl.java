@@ -39,29 +39,43 @@ public class StationImpl implements StationService {
     private FirebaseStorageService firebaseStorageService;
 
     @Override
-    public Station createStation(StationRequest request, MultipartFile image) throws IOException {
-        String imageUrl = null;
-        if (image != null && !image.isEmpty()) {
-            imageUrl = firebaseStorageService.uploadFile(image);
+    public StationInfoResponse createStation(StationRequest request, MultipartFile file) throws IOException {
+        if (stationRepository.existsByName(request.getName())) {
+            throw new RuntimeException("Station already exists");
         }
-        Station station = Station.builder()
-                .name(request.getName())
-                .address(request.getAddress())
-                .latitude(request.getLatitude())
-                .longitude(request.getLongitude())
-                .capacity(request.getCapacity())
-                .status(request.getStatus())
+        Station station = new Station();
+        station.setName(request.getName());
+        station.setAddress(request.getAddress());
+        station.setLatitude(request.getLatitude());
+        station.setLongitude(request.getLongitude());
+        station.setCapacity(request.getCapacity());
+        station.setStatus(request.getStatus());
+        stationRepository.save(station);
+
+        // Upload image to Firebase
+        if (file != null && !file.isEmpty()) {
+            try {
+                String imageUrl = firebaseStorageService.uploadFile(file, "stationImages/");
+                station.setImageUrl(imageUrl);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new AppException(ErrorCode.FAIL_UPLOADFILE);
+            }
+        }
+        return StationInfoResponse.builder()
+                .name(station.getName())
+                .address(station.getAddress())
+                .latitude(station.getLatitude())
+                .longitude(station.getLongitude())
+                .capacity(station.getCapacity())
+                .status(station.getStatus())
                 .build();
-        return stationRepository.save(station);
     }
 
     @Override
     @Transactional
-    public Station updateStation(Long id, StationRequest request,MultipartFile image) throws IOException {
-        String imageUrl = null;
-        if (image != null && !image.isEmpty()) {
-            imageUrl = firebaseStorageService.uploadFile(image);
-        }
+    public Station updateStation(Long id, StationRequest request, MultipartFile image) throws IOException {
         Station station = stationRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.STATION_NOT_EXISTED));
 
