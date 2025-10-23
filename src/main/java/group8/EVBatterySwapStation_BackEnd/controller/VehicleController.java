@@ -1,20 +1,19 @@
 package group8.EVBatterySwapStation_BackEnd.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import group8.EVBatterySwapStation_BackEnd.DTO.request.VehicleRegistrationRequest;
-import group8.EVBatterySwapStation_BackEnd.entity.ApiResponse;
-import group8.EVBatterySwapStation_BackEnd.entity.Battery;
-import group8.EVBatterySwapStation_BackEnd.entity.Driver;
 import group8.EVBatterySwapStation_BackEnd.entity.Vehicle;
 import group8.EVBatterySwapStation_BackEnd.repository.BatteryRepository;
 import group8.EVBatterySwapStation_BackEnd.repository.DriverRepository;
 import group8.EVBatterySwapStation_BackEnd.service.VehicleService;
-import group8.EVBatterySwapStation_BackEnd.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/vehicles")
@@ -29,23 +28,13 @@ public class VehicleController {
     @Autowired
     private BatteryRepository batteryRepository;
 
-    @PostMapping("/register")
-    public ResponseEntity<Vehicle> registerVehicle(@RequestBody VehicleRegistrationRequest request) {
-        Driver driver = driverRepository.findById(SecurityUtils.currentUserId())
-                .orElseThrow(() -> new RuntimeException("Driver not found"));
-        if (!driver.isSubscribed()) {
-            throw new IllegalStateException("Driver chưa đăng ký dịch vụ đổi pin");
-        }
-        Vehicle vehicle = new Vehicle();
-        vehicle.setVin(request.getVin());
-        vehicle.setBatteryType(request.getBatteryType());
-        vehicle.setModel(request.getModel());
-        vehicle.setManufacturer(request.getManufacturer());
-        vehicle.setImageUrl(request.getImageUrl());
-        vehicle.setDriver(driver);
-
-        Vehicle registeredVehicle = vehicleService.registerVehicle(vehicle);
-        return new ResponseEntity<>(registeredVehicle, HttpStatus.CREATED);
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Vehicle> registerVehicle(
+            @ModelAttribute VehicleRegistrationRequest request,
+            @RequestPart(value = "image", required = false) MultipartFile file) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        VehicleRegistrationRequest vehicleRequest = objectMapper.convertValue(request, VehicleRegistrationRequest.class);
+        return ResponseEntity.status(HttpStatus.CREATED).body(vehicleService.registerVehicle(vehicleRequest, file));
     }
 
 }
