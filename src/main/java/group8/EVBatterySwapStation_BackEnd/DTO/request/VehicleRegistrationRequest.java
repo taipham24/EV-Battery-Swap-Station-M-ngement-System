@@ -8,5 +8,4 @@ public class VehicleRegistrationRequest {
     private BatteryType batteryType;
     private String model;
     private String manufacturer;
-    private String imageUrl;
 }
